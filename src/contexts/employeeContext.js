@@ -33,7 +33,7 @@ const EmployeeContextProvider = ({children}) => {
             console.log(newEmployee)
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
-                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.product})
+                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employee})
                 return response.data
             }
         } catch (error) {
