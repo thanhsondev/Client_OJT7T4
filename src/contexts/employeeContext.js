@@ -77,10 +77,10 @@ const EmployeeContextProvider = ({children}) => {
     }
 
     return (
-        <AmiiboContext.Provider value={amiiboContextData}>
+        <EmployeeContext.Provider value={employeeContextData}>
             {children}
-        </AmiiboContext.Provider>
+        </EmployeeContext.Provider>
     )
 }
 
-export default AmiiboContextProvider
+export default EmployeeContextProvider
