@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import EmployeeContextProvider from './contexts/employeeContext';
 import TechnicalContextProvider from './contexts/technicalContext';
 import AddEmployee from './pages/employee/addEmployee';
+import RadioCommon from './components/RadioCommon';
 
 function App() {
   return (
@@ -12,6 +13,9 @@ function App() {
       <TechnicalContextProvider>
         <div>
           Sidebar
+          <br/>
+          
+         <RadioCommon/>
         </div>
         <div>
           <BrowserRouter>
