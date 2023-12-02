@@ -26,9 +26,9 @@ const AddEmployeePage = () => {
         )
     ))
 
-    const [technicalId, setTechnicalId] = useState(null);
+    const [technicalIds, setTechnicalIds] = useState([]);
     const optionChange = (checkedTechnical) => {
-        setTechnicalId(checkedTechnical.length > 0 ? checkedTechnical[0] : null);
+        setTechnicalIds(checkedTechnical);
     };
 
     const [gender, setGender] = useState();
@@ -45,7 +45,9 @@ const AddEmployeePage = () => {
         formData.append("email", values.email)
         formData.append("identity", values.identity)
         formData.append("gender", gender)
-        formData.append("technical", technicalId)
+        formData.append("technical", JSON.stringify(technicalIds))
+
+        console.log(technicalIds)
 
         createEmployee(formData)
     };
@@ -214,6 +216,7 @@ const AddEmployeePage = () => {
 
                 <Form.Item
                     name="technical"
+                    label="Technicals"
                     valuePropName="checked"
                     wrapperCol={{
                         offset: 8,
