@@ -1,5 +1,6 @@
 import { createContext, useReducer, useState } from "react";
-import { employeeReducer } from "../reducer/employeeReducer"
+import { employeeReducer } from "../reducers/employeeReducer"
+import { apiUrl } from "./constants";
 import axios from "axios";
 
 export const EmployeeContext = createContext()
@@ -30,7 +31,6 @@ const EmployeeContextProvider = ({children}) => {
 
     const createEmployee = async newEmployee => {
         try {
-            console.log(newEmployee)
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
                 dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employee})

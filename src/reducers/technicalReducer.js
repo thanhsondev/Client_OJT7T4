@@ -1,4 +1,4 @@
-export const productReducer = (state, action) => {
+export const technicalReducer = (state, action) => {
     const {type, payload} = action
     switch (type) {
         case 'TECH_LOADED_SUCCESS':

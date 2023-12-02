@@ -1,14 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import EmployeeContextProvider from './contexts/employeeContext';
 import TechnicalContextProvider from './contexts/technicalContext';
+import AddEmployee from './pages/employee/addEmployee';
 
 function App() {
   return (
     <EmployeeContextProvider>
       <TechnicalContextProvider>
-
+        <div>
+          Sidebar
+        </div>
+        <div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/employee/create" element={<AddEmployee />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
       </TechnicalContextProvider>
     </EmployeeContextProvider>
   );
