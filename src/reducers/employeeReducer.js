@@ -1,4 +1,4 @@
-export const productReducer = (state, action) => {
+export const employeeReducer = (state, action) => {
     const {type, payload} = action
     switch (type) {
         case 'EMP_LOADED_SUCCESS':

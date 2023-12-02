@@ -1,5 +1,6 @@
 import { createContext, useReducer, useState } from "react";
-import { technicalReducer } from "../reducer/technicalReducer"
+import { technicalReducer } from "../reducers/technicalReducer"
+import { apiUrl } from "./constants";
 import axios from "axios";
 
 export const TechnicalContext = createContext()
