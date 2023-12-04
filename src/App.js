@@ -22,7 +22,7 @@ function App() {
         <TechnicalContextProvider>
           <ComponentsContextProvider>
             <div>
-              Sidebar
+              Sidebar 
             </div>
             <div>
               <BrowserRouter>
