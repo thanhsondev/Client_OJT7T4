@@ -19,4 +19,5 @@ const CheckBoxCommon = ({values}) => {
         <br />
     </>
 )};
+
 export default CheckBoxCommon;
