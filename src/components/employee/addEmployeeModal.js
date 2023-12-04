@@ -1,8 +1,14 @@
 import { useContext, useState, useEffect } from 'react'
 import { EmployeeContext } from '../../contexts/employeeContext'
 import { TechnicalContext } from '../../contexts/technicalContext'
-import { Button, Checkbox, Form, Input, Radio, Upload, message, Modal } from 'antd';
+import { ComponentsContext } from '../../contexts/componentsContext'
+
+import { Form, Upload, message, Modal } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import TextInput from '../inputs/InputTextCommon'
+import Checkbox from '../inputs/CheckBoxCommon'
+import RadioButton from '../inputs/RadioCommon'
+import Button from '../buttons/ButtonCommon'
 
 const AddEmployeePage = () => {
     const {
@@ -14,7 +20,12 @@ const AddEmployeePage = () => {
         createEmployee,
         showModal,
         setShowModal
-    } = useContext(EmployeeContext)
+    } = useContext(EmployeeContext);
+
+    const {
+        checkedItems,
+        radioItem
+    } = useContext(ComponentsContext);
 
     useEffect(() => { getTechnicals() }, [])
 
@@ -28,32 +39,40 @@ const AddEmployeePage = () => {
         )
     ))
 
-    const [technicalIds, setTechnicalIds] = useState([]);
-    const optionChange = (checkedTechnical) => {
-        setTechnicalIds(checkedTechnical);
-    };
-
-    const [gender, setGender] = useState();
-    const onChangeGender = (e) => {
-        setGender(e.target.value);
-    };
+    const genderOptions = [
+        {
+            label: 'Male',
+            value: 'male',
+        },
+        {
+            label: 'Female',
+            value: 'female',
+        },
+        {
+            label: 'Other',
+            value: 'other',
+        },
+    ]
 
     const onFinish = (values) => {
+        console.log(values)
         const formData = new FormData()
-        formData.append("image", imgFile)
-        formData.append("name", values.name)
-        formData.append("code", values.code)
-        formData.append("phone", values.phone)
-        formData.append("email", values.email)
-        formData.append("identity", values.identity)
-        formData.append("gender", gender)
-        formData.append("technical", JSON.stringify(technicalIds))
+        formData.append("image", imgFile);
+        formData.append("name", form.getFieldValue("name"));
+        formData.append("code", form.getFieldValue("code"));
+        formData.append("phone", "+84" + form.getFieldValue("phone"));
+        formData.append("email", form.getFieldValue("email"));
+        formData.append("identity", form.getFieldValue("identity"));
+        formData.append("gender", radioItem);
+        formData.append("technical", JSON.stringify(checkedItems));
 
         createEmployee(formData)
         setShowModal(false);
     };
+
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
+        console.log(form.getFieldValue("name"))
     };
 
     const [loading, setLoading] = useState(false);
@@ -105,18 +124,20 @@ const AddEmployeePage = () => {
         setShowModal(false);
     };
 
+    const [form] = Form.useForm();
+
     return (
         <>
             <Modal 
                 title="Add new employee" 
-                okText="Create"
-                cancelText="Cancel" 
                 open={showModal} 
                 width={800} 
                 footer={null}
+                onCancel={handleCancel}
                 >
                 <Form
-                    name="basic"
+                    form={form}
+                    name="add employee"
                     layout="vertical"
                     initialValues={{
                         remember: true,
@@ -160,7 +181,7 @@ const AddEmployeePage = () => {
                             },
                         ]}
                     >
-                        <Input />
+                        <TextInput />
                     </Form.Item>
 
                     <Form.Item
@@ -173,7 +194,7 @@ const AddEmployeePage = () => {
                             },
                         ]}
                     >
-                        <Input />
+                        <TextInput />
                     </Form.Item>
 
                     <Form.Item
@@ -186,7 +207,7 @@ const AddEmployeePage = () => {
                             },
                         ]}
                     >
-                        <Input addonBefore="+84"/>
+                        <TextInput addonBefore={"+84"}/>
                     </Form.Item>
 
                     <Form.Item
@@ -199,7 +220,7 @@ const AddEmployeePage = () => {
                             },
                         ]}
                     >
-                        <Input />
+                        <TextInput />
                     </Form.Item>
 
                     <Form.Item
@@ -212,28 +233,22 @@ const AddEmployeePage = () => {
                             },
                         ]}
                     >
-                        <Input />
+                        <TextInput />
                     </Form.Item>
 
                     <Form.Item
-                        name="technical"
                         label="Technicals"
                         valuePropName="checked"
                     >
-                        <Checkbox.Group options={techOptions} onChange={optionChange} />
+                        <Checkbox values={techOptions} />
                     </Form.Item>
 
                     <Form.Item label="Gender">
-                        <Radio.Group onChange={onChangeGender}>
-                            <Radio value="male"> Male </Radio>
-                            <Radio value="female"> Female </Radio>
-                        </Radio.Group>
+                        <RadioButton values={genderOptions} />
                     </Form.Item>
 
                     <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
+                        <Button buttonType={"save"} handleOnClick={() => form.submit()}/>
                     </Form.Item>
                 </Form>
             </Modal>
