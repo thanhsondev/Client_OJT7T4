@@ -1,8 +1,11 @@
 import { useContext, useState, useEffect } from 'react'
 import { EmployeeContext } from '../../contexts/employeeContext'
 import { TechnicalContext } from '../../contexts/technicalContext'
+import { ComponentsContext } from '../../contexts/componentsContext'
+
 import { Button, Checkbox, Form, Input, Radio, Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import CheckBoxCommon from '../../components/CheckBoxCommon.jsx'
 
 const AddEmployeePage = () => {
     const {
@@ -13,6 +16,10 @@ const AddEmployeePage = () => {
     const {
         createEmployee
     } = useContext(EmployeeContext)
+
+    const {
+        checkedItems
+    } = useContext(ComponentsContext);
 
     useEffect(() => { getTechnicals() }, [])
 
@@ -26,10 +33,10 @@ const AddEmployeePage = () => {
         )
     ))
 
-    const [technicalId, setTechnicalId] = useState(null);
-    const optionChange = (checkedTechnical) => {
-        setTechnicalId(checkedTechnical.length > 0 ? checkedTechnical[0] : null);
-    };
+    // const [technicalId, setTechnicalId] = useState(null);
+    // const optionChange = (checkedTechnical) => {
+    //     setTechnicalId(checkedTechnical.length > 0 ? checkedTechnical[0] : null);
+    // };
 
     const [gender, setGender] = useState();
     const onChangeGender = (e) => {
@@ -45,7 +52,7 @@ const AddEmployeePage = () => {
         formData.append("email", values.email)
         formData.append("identity", values.identity)
         formData.append("gender", gender)
-        formData.append("technical", technicalId)
+        formData.append("technical", checkedItems)
 
         createEmployee(formData)
     };
@@ -220,7 +227,8 @@ const AddEmployeePage = () => {
                         span: 16,
                     }}
                 >
-                    <Checkbox.Group options={techOptions} onChange={optionChange} />
+                    {/* <Checkbox.Group options={techOptions} onChange={optionChange} /> */}
+                    <CheckBoxCommon values={techOptions} />
                 </Form.Item>
 
                 <Form.Item label="Gender">
