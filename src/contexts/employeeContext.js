@@ -12,6 +12,8 @@ const EmployeeContextProvider = ({children}) => {
         isLoading: true
     });
 
+    const [showModal, setShowModal] = useState(false);
+
     const getEmployee = async (offset, limit) => {
         try {
         const response = await axios.get(`${apiUrl}/employees`)
@@ -73,7 +75,9 @@ const EmployeeContextProvider = ({children}) => {
         findEmployee,
         createEmployee,
         deleteEmployee,
-        updateEmployee
+        updateEmployee,
+        showModal,
+        setShowModal
     }
 
     return (
