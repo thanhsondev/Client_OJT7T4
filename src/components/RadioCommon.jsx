@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { Radio, Space } from 'antd';
-const RadioCommon = () => {
-  const [value, setValue] = useState(1);
-  const onChange = (e) => {
-    console.log('radio checked', e.target.value);
-    setValue(e.target.value);
-  };
-  return (
-    <Radio.Group onChange={onChange} value={value}>
-      <Space direction="vertical">
-        <Radio value={1}>Option A</Radio>
-        <Radio value={2}>Option B</Radio>
-        <Radio value={3}>Option C</Radio>
-      </Space>
-    </Radio.Group>
-  );
-};
+import React, {useContext} from "react";
+import { Radio } from "antd";
+import { ComponentsContext } from "../contexts/componentsContext";
+
+const RadioCommon = ({ Values }) => {
+    const {
+        setRadioItem
+    } = useContext(ComponentsContext);
+
+    const onChange = (radioValues) => {
+        setRadioItem(radioValues);
+        console.log('checked = ', radioValues);
+    };
+    
+    return (
+        <>
+            <Radio.Group options={Values} onChange={onChange} />
+            <br />
+        </>
+)};
 export default RadioCommon;
