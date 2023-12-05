@@ -55,7 +55,6 @@ const AddEmployeePage = () => {
     ]
 
     const onFinish = (values) => {
-        console.log(values)
         const formData = new FormData()
         formData.append("image", imgFile);
         formData.append("name", form.getFieldValue("name"));
@@ -71,6 +70,7 @@ const AddEmployeePage = () => {
     };
 
     const onFinishFailed = (errorInfo) => {
+        // handle error here
         console.log('Failed:', errorInfo);
         console.log(form.getFieldValue("name"))
     };
@@ -88,11 +88,11 @@ const AddEmployeePage = () => {
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
+            return message.error('You can only upload JPG/PNG file!');
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
+            return message.error('Image must smaller than 2MB!');
         }
         return isJpgOrPng && isLt2M;
     };
