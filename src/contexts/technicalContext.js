@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useReducer } from "react";
 import { technicalReducer } from "../reducers/technicalReducer"
 import { apiUrl } from "./constants";
 import axios from "axios";
