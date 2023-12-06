@@ -7,6 +7,7 @@ import TechnicalContextProvider from './contexts/technicalContext';
 import ComponentsContextProvider from './contexts/componentsContext';
 
 import Employees from './pages/employee/employees';
+import Dialog from './components/Dialog';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/employee" element={<Employees />} />
+                  <Route path="/dialog" element={<Dialog />} />
                 </Routes>
               </BrowserRouter>
             </div>
