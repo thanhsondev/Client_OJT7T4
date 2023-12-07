@@ -1,11 +1,14 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { EmployeeContext } from '../../contexts/employeeContext';
 import { Button, Input, Space, Table, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import ButtonCommon from '../../components/buttons/ButtonCommon';
 
+import { ComponentsContext } from '../../contexts/componentsContext';
+import { EmployeeContext } from '../../contexts/employeeContext';
+
+import ButtonCommon from '../../components/buttons/ButtonCommon';
 import AddModal from '../../components/employee/addEmployeeModal';
+import ConfirmModal from '../../components/Modal/ConfirmModal'
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -16,6 +19,10 @@ const Employees = () => {
         deleteEmployee,
     } = useContext(EmployeeContext);
 
+    const {
+        setShowConfirmModal
+    } = useContext(ComponentsContext);
+
     const handleDetails = (record) => {
         navigate(`/employee/${record._id}`);
     };
@@ -24,6 +31,7 @@ const Employees = () => {
         getEmployee();
     }, []);
 
+    const [empId, setEmpId] = useState('');
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -42,6 +50,7 @@ const Employees = () => {
 
     const handleDelete = (empId) => {
         deleteEmployee(empId);
+        setShowConfirmModal(false);
     };
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -188,29 +197,29 @@ const Employees = () => {
                     {technical.map((tech) => {
                         let techName = tech.name;
                         let color;
-                        switch (techName.toLowerCase()) {
-                            case 'java':
+                        switch (techName) {
+                            case 'Java':
                                 color = 'geekblue';
                                 break;
-                            case 'javascript':
+                            case 'Javascript':
                                 color = 'gold';
                                 break;
-                            case 'php':
+                            case 'PHP':
                                 color = 'purple';
                                 break;
-                            case 'python':
+                            case 'Python':
                                 color = 'green';
                                 break;
-                            case 'reactjs':
+                            case 'ReactJs':
                                 color = 'cyan';
                                 break;
-                            case 'html':
+                            case 'HTML':
                                 color = 'magenta';
                                 break;
-                            case 'css':
+                            case 'CSS':
                                 color = 'Gray';
                                 break;
-                            case 'nodejs':
+                            case 'NodeJs':
                                 color = 'lime';
                                 break;
                             default:
@@ -219,7 +228,7 @@ const Employees = () => {
 
                         return (
                             <Tag color={color} key={techName}>
-                                {techName.toUpperCase()}
+                                {techName}
                             </Tag>
                         );
                     })}
@@ -254,7 +263,7 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
-                    <ButtonCommon buttonType="delete" handleOnClick={() => handleDelete(record._id)} />
+                    <ButtonCommon buttonType="delete" handleOnClick={() => {setShowConfirmModal(true); setEmpId(record._id);}} />
                 </Space>
             ),
         },
@@ -262,11 +271,12 @@ const Employees = () => {
 
     return (
         <>
-            <Button type="primary" style={{ float: 'right', marginRight: '10px', borderRadius: '8px' }} onClick={() => setShowModal(true)}>
+            <ButtonCommon buttonType="add" handleOnClick={() => setShowModal(true)}>
                 Add Employee
-            </Button>
+            </ButtonCommon>
             <Table columns={columns} dataSource={employees} pagination={{ pageSize: 6 }} rowKey="_id" />
             <AddModal />
+            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
         </>
     );
 };

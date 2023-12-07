@@ -16,7 +16,7 @@ export const employeeReducer = (state, action) => {
         case 'EMP_CREATED_SUCCESS':
            return {
                 ...state,
-                employees: [...state.employees, payload]
+                employees: payload,
             }
         case 'DELETE_EMP':
             return {

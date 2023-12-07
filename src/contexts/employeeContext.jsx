@@ -14,7 +14,7 @@ const EmployeeContextProvider = ({children}) => {
 
     const [showModal, setShowModal] = useState(false);
 
-    const getEmployee = async (offset, limit) => {
+    const getEmployee = async () => {
         try {
         const response = await axios.get(`${apiUrl}/employees`)
         if (response.status === 200) {
@@ -35,7 +35,7 @@ const EmployeeContextProvider = ({children}) => {
         try {
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
-                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employee})
+                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees})
                 return response.data
             }
         } catch (error) {
@@ -47,7 +47,7 @@ const EmployeeContextProvider = ({children}) => {
 
     const deleteEmployee = async empId => {
 		try {
-			const response = await axios.delete(`${apiUrl}/employees/delete/${empId}`)
+			const response = await axios.patch(`${apiUrl}/employees/delete/${empId}`)
 			if (response.data.success)
 				dispatch({ type: 'DELETE_EMP', payload: empId })
 		} catch (error) {
