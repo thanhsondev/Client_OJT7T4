@@ -3,7 +3,7 @@ import { Checkbox } from 'antd';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
 // const plainOptions = ['Cb1', 'Cb2', 'Cb3'];
-const CheckBoxCommon = ({values}) => {
+const CheckBoxCommon = ({options, defaultValue}) => {
     const {
         setCheckedItems
     } = useContext(ComponentsContext);
@@ -15,7 +15,7 @@ const CheckBoxCommon = ({values}) => {
 
     return (
     <>
-        <Checkbox.Group options={values} onChange={onChange} />
+        <Checkbox.Group options={options} defaultValue={defaultValue} onChange={onChange} />
         <br />
     </>
 )};

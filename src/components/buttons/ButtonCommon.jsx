@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Flex } from "antd";
 
-const ButtonCommon = ({ buttonType, size = "large", handleOnClick }) => {
+const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) => {
     return (
         <Flex gap="small" wrap="wrap" className="site-button-ghost-wrapper">
             {buttonType === "reload" && (
@@ -22,7 +22,7 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick }) => {
                 </Button>
             )}
             {buttonType === "cancel" && (
-                <Button type="primary" danger onClick={handleOnClick}>
+                <Button onClick={handleOnClick}>
                     Cancel
                 </Button>
             )}
@@ -33,11 +33,16 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick }) => {
                 >
                 </Button>
             )}
-            {buttonType === "detele" && (
-                <Button type="detele" 
+            {buttonType === "delete" && (
+                <Button type="delete" 
                     icon={<DeleteTwoTone twoToneColor=" #eb2f96 " />} 
                     onClick={handleOnClick}
                 >
+                </Button>
+            )}
+            {buttonType === "delete-text" && (
+                <Button type="primary" danger onClick={handleOnClick}>
+                    Delete
                 </Button>
             )}
 

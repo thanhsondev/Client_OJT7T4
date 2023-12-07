@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import { Radio } from "antd";
 import { ComponentsContext } from "../../contexts/componentsContext";
 
-const RadioCommon = ({ values }) => {
+const RadioCommon = ({ options, defaultValue }) => {
     const {
         setRadioItem
     } = useContext(ComponentsContext);
@@ -14,7 +14,7 @@ const RadioCommon = ({ values }) => {
     
     return (
         <>
-            <Radio.Group options={values} onChange={onChange} />
+            <Radio.Group options={options} defaultValue={defaultValue} onChange={onChange} />
             <br />
         </>
 )};

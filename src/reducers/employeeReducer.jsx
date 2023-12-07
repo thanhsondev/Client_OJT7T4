@@ -4,7 +4,7 @@ export const employeeReducer = (state, action) => {
         case 'EMP_LOADED_SUCCESS':
             return {
                 ...state,
-                products: payload,
+                employees: payload,
                 isLoading: false
             }
         case 'EMP_LOADED_FAIL':
@@ -16,7 +16,7 @@ export const employeeReducer = (state, action) => {
         case 'EMP_CREATED_SUCCESS':
            return {
                 ...state,
-                employees: [...state.employees, payload]
+                employees: payload,
             }
         case 'DELETE_EMP':
             return {
@@ -33,6 +33,18 @@ export const employeeReducer = (state, action) => {
                 ...state,
                 employees: newEmployee
             }
+            case 'EMPDETAILS_LOADED_SUCCESS':
+                return {
+                    ...state,
+                    employee: payload,
+                    isLoading: false
+                }
+            case 'EMPDETAILS_LOADED_FAIL':
+                return {
+                    ...state,
+                    payload: [],
+                    isLoading: false
+                }
 
         default:
             return state

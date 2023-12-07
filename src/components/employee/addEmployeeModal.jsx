@@ -240,7 +240,7 @@ const AddEmployeePage = () => {
                         label="Technicals"
                         valuePropName="checked"
                     >
-                        <Checkbox values={techOptions} />
+                        <Checkbox options={techOptions} />
                     </Form.Item>
 
                     <Form.Item label="Gender">

@@ -14,7 +14,7 @@ const EmployeeContextProvider = ({children}) => {
 
     const [showModal, setShowModal] = useState(false);
 
-    const getEmployee = async (offset, limit) => {
+    const getEmployee = async () => {
         try {
         const response = await axios.get(`${apiUrl}/employees`)
         if (response.status === 200) {
@@ -35,7 +35,7 @@ const EmployeeContextProvider = ({children}) => {
         try {
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
-                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employee})
+                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees})
                 return response.data
             }
         } catch (error) {
@@ -47,7 +47,7 @@ const EmployeeContextProvider = ({children}) => {
 
     const deleteEmployee = async empId => {
 		try {
-			const response = await axios.delete(`${apiUrl}/employees/delete/${empId}`)
+			const response = await axios.patch(`${apiUrl}/employees/delete/${empId}`)
 			if (response.data.success)
 				dispatch({ type: 'DELETE_EMP', payload: empId })
 		} catch (error) {
@@ -55,9 +55,9 @@ const EmployeeContextProvider = ({children}) => {
 		}
 	}
 
-	const updateEmployee = async updatedEmp => {
+	const updateEmployee = async (updatedEmp, empId) => {
 		try {
-			const response = await axios.patch(`${apiUrl}/employees/update/${updatedEmp._id}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
+			const response = await axios.patch(`${apiUrl}/employees/update/${empId}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
 			if (response.data.success) {
 				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee })
 				return response.data
@@ -68,6 +68,18 @@ const EmployeeContextProvider = ({children}) => {
 				: { success: false, message: 'Server error' }
 		}
 	}
+
+    const getEmployeeById = async (id) => {
+        try {
+            const response = await axios.get(`${apiUrl}/employees/${id}`);
+            if (response.status === 200) {
+                dispatch({ type: 'EMPDETAILS_LOADED_SUCCESS', payload: response.data });
+            }
+        } catch (error) {
+            console.log(error);
+            dispatch({ type: 'EMPDETAILS_LOADED_FAIL' });
+        }
+    }
     
     const employeeContextData = {
         employeeState,
@@ -76,6 +88,7 @@ const EmployeeContextProvider = ({children}) => {
         createEmployee,
         deleteEmployee,
         updateEmployee,
+        getEmployeeById,
         showModal,
         setShowModal
     }

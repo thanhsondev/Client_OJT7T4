@@ -5,12 +5,15 @@ export const ComponentsContext = createContext()
 const ComponentsContextProvider = ({children}) => {
     const [checkedItems, setCheckedItems] = useState([]);
     const [radioItem, setRadioItem] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     
     const checkContextData = {
         checkedItems,
         setCheckedItems,
         radioItem,
-        setRadioItem
+        setRadioItem,
+        showConfirmModal,
+        setShowConfirmModal
     }
 
     return (
