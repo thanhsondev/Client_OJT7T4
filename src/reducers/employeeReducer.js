@@ -4,7 +4,7 @@ export const employeeReducer = (state, action) => {
         case 'EMP_LOADED_SUCCESS':
             return {
                 ...state,
-                products: payload,
+                employees: payload,
                 isLoading: false
             }
         case 'EMP_LOADED_FAIL':

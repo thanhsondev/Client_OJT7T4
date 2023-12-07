@@ -33,8 +33,8 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick }) => {
                 >
                 </Button>
             )}
-            {buttonType === "detele" && (
-                <Button type="detele" 
+            {buttonType === "delete" && (
+                <Button type="delete" 
                     icon={<DeleteTwoTone twoToneColor=" #eb2f96 " />} 
                     onClick={handleOnClick}
                 >
