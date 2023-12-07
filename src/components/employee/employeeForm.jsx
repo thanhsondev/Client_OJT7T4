@@ -1,5 +1,4 @@
 import { useContext, useState, useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Form, Upload, message } from 'antd';
 
 import { EmployeeContext } from '../../contexts/employeeContext';
@@ -48,7 +47,7 @@ const EmployeeForm = (employee) => {
       formData.append("gender", radioItem);
       formData.append("technical", JSON.stringify(checkedItems));
 
-      updateEmployee(FormData, employee.employeeId)
+      updateEmployee(formData, employee.employeeId)
 
     } catch (error) {
       console.error('Validation failed:', error);
@@ -58,8 +57,6 @@ const EmployeeForm = (employee) => {
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
-
-  const excludedFields = ['technical'];
 
   let techOptions = []
     technicals.map(tech => (
@@ -93,7 +90,6 @@ const EmployeeForm = (employee) => {
     },
 ]
 
-  const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
     const [imgFile, setImgFile] = useState();
 
@@ -116,13 +112,8 @@ const beforeUpload = (file) => {
 };
 
 const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-        setLoading(true);
-        return;
-    }
     if (info.file.status === 'done') {
         getBase64(info.file.originFileObj, (url) => {
-            setLoading(false);
             setImageUrl(url);
         });
         setImgFile(info.file.originFileObj)

@@ -17,7 +17,7 @@ const EmployeeDetails = () => {
 
   return (
     <>
-      {employee !== null && <EmployeeForm employee={employee[0]} employeeId={employeeId} />}
+      {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
     </>
   );
 };

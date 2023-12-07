@@ -1,23 +1,37 @@
-import React, {useContext} from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { Checkbox } from 'antd';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
-// const plainOptions = ['Cb1', 'Cb2', 'Cb3'];
-const CheckBoxCommon = ({options, defaultValue}) => {
-    const {
-        setCheckedItems
+const CheckBoxCommon = ({ options, defaultValue }) => {
+    const { 
+        setCheckedItems 
     } = useContext(ComponentsContext);
 
+    const setCheckedItemsCallback = useCallback(
+        (value) => {
+            setCheckedItems(value);
+        },
+        [setCheckedItems]
+    );
+
+    useEffect(() => {
+        console.log('useEffect triggered');
+        setCheckedItemsCallback(defaultValue);
+    }, [setCheckedItemsCallback, defaultValue]);
+
     const onChange = (checkedValues) => {
-        setCheckedItems(checkedValues);
-        console.log('checked = ', checkedValues);
+        console.log('onChange triggered');
+        setCheckedItemsCallback(checkedValues);
     };
 
+    console.log('Component rendered');
+
     return (
-    <>
-        <Checkbox.Group options={options} defaultValue={defaultValue} onChange={onChange} />
-        <br />
-    </>
-)};
+        <>
+            <Checkbox.Group options={options} defaultValue={defaultValue} onChange={onChange} />
+            <br />
+        </>
+    );
+};
 
 export default CheckBoxCommon;

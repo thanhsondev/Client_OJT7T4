@@ -244,7 +244,7 @@ const AddEmployeePage = () => {
                     </Form.Item>
 
                     <Form.Item label="Gender">
-                        <RadioButton values={genderOptions} />
+                        <RadioButton options={genderOptions} />
                     </Form.Item>
 
                     <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>

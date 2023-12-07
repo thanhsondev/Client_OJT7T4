@@ -26,25 +26,20 @@ export const employeeReducer = (state, action) => {
         case 'FIND_EMP':
             return { ...state, employee: payload }
         case 'UPDATE_EMP':
-            const newEmployee = state.employees.map(employee =>
-                employee._id === payload._id ? payload : employee
-            )
             return {
                 ...state,
-                employees: newEmployee
+                employee: payload
             }
-            case 'EMPDETAILS_LOADED_SUCCESS':
-                return {
-                    ...state,
-                    employee: payload,
-                    isLoading: false
-                }
-            case 'EMPDETAILS_LOADED_FAIL':
-                return {
-                    ...state,
-                    payload: [],
-                    isLoading: false
-                }
+        case 'EMPDETAILS_LOADED_SUCCESS':
+            return {
+                ...state,
+                employee: payload
+            }
+        case 'EMPDETAILS_LOADED_FAIL':
+            return {
+                ...state,
+                payload: []
+            }
 
         default:
             return state
