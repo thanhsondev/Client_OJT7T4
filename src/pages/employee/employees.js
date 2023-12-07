@@ -23,7 +23,6 @@ const Employees = () => {
     useEffect(() => {
         getEmployee();
     }, []);
-    console.log('Employee Data:', employees);
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
