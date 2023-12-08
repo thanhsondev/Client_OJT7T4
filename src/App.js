@@ -1,24 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import EmployeeContextProvider from './contexts/employeeContext';
+import TechnicalContextProvider from './contexts/technicalContext';
+import ComponentsContextProvider from './contexts/componentsContext';
+
+import Employees from './pages/employee/employees';
+import EmployeeDetails from './pages/employee/employeeDetails';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <EmployeeContextProvider>
+        <TechnicalContextProvider>
+          <ComponentsContextProvider>
+            <div>
+              Sidebar 
+            </div>
+            <div>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/employee" element={<Employees />} />
+                  <Route path="/employee/:employeeId" element={<EmployeeDetails />} />
+                </Routes>
+              </BrowserRouter>
+            </div>
+          </ComponentsContextProvider>
+        </TechnicalContextProvider>
+      </EmployeeContextProvider>
   );
 }
 
