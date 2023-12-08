@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { Checkbox } from 'antd';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
@@ -7,24 +7,9 @@ const CheckBoxCommon = ({ options, defaultValue }) => {
         setCheckedItems 
     } = useContext(ComponentsContext);
 
-    const setCheckedItemsCallback = useCallback(
-        (value) => {
-            setCheckedItems(value);
-        },
-        [setCheckedItems]
-    );
-
-    useEffect(() => {
-        console.log('useEffect triggered');
-        setCheckedItemsCallback(defaultValue);
-    }, [setCheckedItemsCallback, defaultValue]);
-
     const onChange = (checkedValues) => {
-        console.log('onChange triggered');
-        setCheckedItemsCallback(checkedValues);
+        setCheckedItems(checkedValues);
     };
-
-    console.log('Component rendered');
 
     return (
         <>

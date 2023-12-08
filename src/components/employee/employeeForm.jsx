@@ -19,7 +19,7 @@ const EmployeeForm = (employee) => {
         technicalState: { technicals },
         getTechnicals
     } = useContext(TechnicalContext);
-    useEffect(() => { getTechnicals() }, [])
+    useEffect(() => { getTechnicals() }, []);
 
     const {
         checkedItems,
@@ -47,7 +47,8 @@ const EmployeeForm = (employee) => {
       formData.append("gender", radioItem);
       formData.append("technical", JSON.stringify(checkedItems));
 
-      updateEmployee(formData, employee.employeeId)
+      updateEmployee(formData, employee.employeeId);
+      setIsEditing(!isEditing);
 
     } catch (error) {
       console.error('Validation failed:', error);
@@ -74,6 +75,7 @@ const EmployeeForm = (employee) => {
             tech._id
         )
     ))
+
 
   const genderOptions = [
     {

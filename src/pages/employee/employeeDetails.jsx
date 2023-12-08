@@ -13,7 +13,7 @@ const EmployeeDetails = () => {
 
   useEffect(() => {
     getEmployeeById(employeeId);
-  }, [employeeId]);
+  }, [employee]);
 
   return (
     <>
