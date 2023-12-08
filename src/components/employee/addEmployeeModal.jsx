@@ -127,13 +127,13 @@ const AddEmployeePage = () => {
     const [form] = Form.useForm();
 
     return (
-        <>
             <Modal 
                 title="Add new employee" 
                 open={showModal} 
                 width={800} 
                 footer={null}
                 onCancel={handleCancel}
+                style={{height: "680px", overflowY: "auto", overflowX: "hidden", top:"20px"}}
                 >
                 <Form
                     form={form}
@@ -252,7 +252,6 @@ const AddEmployeePage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-        </>
     )
 }
 
