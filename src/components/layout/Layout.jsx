@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import React from "react";
 import { Sidebar } from "./SideBar";
 import { NavBar } from "./NavBar";
-// import { Col, Flex, Row } from "antd";
 const spacing = 10;
 
 export const Layout = () => {
@@ -37,6 +36,7 @@ export const Layout = () => {
                   flex: 1,
                   overflowY: "auto",
                   marginTop: spacing / 2,
+                  overflowX: "hidden"
                }}
             >
                <Outlet />

@@ -8,10 +8,10 @@ import {
    MenuOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
-import { LayoutContext } from "../../context/LayoutContext";
+// import { LayoutContext } from "../../contexts/LayoutContext";
 
 export const NavBar = () => {
-   const { layout, setLayout } = useContext(LayoutContext);
+   // const { layout, setLayout } = useContext(LayoutContext);
 
    const Username = (props) => {
       return <p style={{ fontWeight: "600", fontSize: "larger" }}>{props.name}</p>;
@@ -40,10 +40,10 @@ export const NavBar = () => {
          <div>
             <MenuOutlined style={{ fontSize: "30px", marginTop: "10px" }} />
          </div>
-         <div style={{ width: "75vw" }}></div>
+         <div style={{ width: "67vw" }}></div>
          <BellOutlined
             style={{ marginRight: "25px", fontSize: "25px" }}
-            onClick={setLayout(!layout)}
+            // onClick={setLayout(!layout)}
          />
          <Dropdown
             menu={{

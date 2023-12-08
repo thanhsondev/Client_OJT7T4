@@ -1,7 +1,7 @@
 import React from "react";
 import { AppstoreOutlined, PieChartOutlined, TeamOutlined } from "@ant-design/icons";
 import { Avatar, Menu } from "antd";
-import { LayoutContext } from "../../context/LayoutContext";
+// import { LayoutContext } from "../../contexts/LayoutContext";
 
 export const Sidebar = () => {
    function getItem(label, key, icon, children, type) {

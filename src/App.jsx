@@ -1,24 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Dashboard } from "./pages/dashboard/Dashboard";
-import { Layout } from "./components/layout/Layout";
-import { Employees } from "./pages/employees/Employees";
-import { EmployeeProfile } from "./pages/employeeProfile/EmployeeProfile";
-import "./App.css";
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
 
-import LayoutContextProvider from "./context/LayoutContext";
+import EmployeeContextProvider from './contexts/employeeContext';
+import TechnicalContextProvider from './contexts/technicalContext';
+import ComponentsContextProvider from './contexts/componentsContext';
+import LayoutContextProvider from './contexts/LayoutContext';
+
+import {Layout} from './components/layout/Layout';
+import {Dashboard} from './pages/dashboard/Dashboard';
+import Employees from './pages/employee/employees';
+import EmployeeDetails from './pages/employee/employeeDetails';
 
 function App() {
    return (
       <LayoutContextProvider>
-         <Routes>
-            <Route path="/" element={<Layout />}>
-               <Route path="dashboard" element={<Dashboard />} />
-               <Route path="employee">
-                  <Route index element={<Employees />} />
-                  <Route path=":employeeId" element={<EmployeeProfile />} />
-               </Route>
-            </Route>
-         </Routes>
+         <EmployeeContextProvider>
+            <TechnicalContextProvider>
+               <ComponentsContextProvider>
+                  <Routes>
+                     <Route path="/" element={<Layout />}>
+                        <Route path="dashboard" element={<Dashboard />} />
+                        <Route path="employee">
+                           <Route index element={<Employees />} />
+                           <Route path=":employeeId" element={<EmployeeDetails />} />
+                        </Route>
+                     </Route>
+                  </Routes>
+               </ComponentsContextProvider>
+            </TechnicalContextProvider>
+         </EmployeeContextProvider>
       </LayoutContextProvider>
    );
 }

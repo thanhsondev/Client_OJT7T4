@@ -17,7 +17,9 @@ const EmployeeDetails = () => {
 
   return (
     <>
+    <div style={{width: "100%"}}>
       {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
+    </div>
     </>
   );
 };

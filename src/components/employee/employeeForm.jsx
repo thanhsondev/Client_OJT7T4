@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { Form, Upload, message, Alert } from 'antd';
+import { Link } from "react-router-dom";
 
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
@@ -51,7 +52,6 @@ const EmployeeForm = (employee) => {
     
             setSuccessAlert(true);
 
-            // Automatically close the alert after 3 seconds
             setTimeout(() => {
                 setSuccessAlert(false);
             }, 3000);
@@ -62,7 +62,7 @@ const EmployeeForm = (employee) => {
     };
 
     const onCloseAlert = () => {
-        setSuccessAlert(false); // Close the success alert
+        setSuccessAlert(false);
     };
     
     const onFinishFailed = (errorInfo) => {
@@ -134,8 +134,11 @@ const EmployeeForm = (employee) => {
 
     return (
         <>
-        <h1>Employee Details</h1>
-        <Button buttonType={"edit"} handleOnClick={() => handleEdit()}/>
+        <div>
+        <Link to="/employee">Back</Link>
+        <h1 style={{textAlign: "center"}}>{employee.employee.name.toUpperCase()}</h1>
+        </div>
+        <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()}/>
         <Form
             form={form}
             name="add employee"

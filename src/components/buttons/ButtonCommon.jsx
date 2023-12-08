@@ -17,7 +17,7 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
                 <Button shape="circle" icon={<PlusOutlined />} size={size} onClick={handleOnClick}/>
             )}
             {buttonType === "save" && (
-                <Button type="primary" className="ant-btn-success" onClick={handleOnClick}>
+                <Button type="primary" size={size} onClick={handleOnClick}>
                     Save
                 </Button>
             )}
@@ -41,8 +41,13 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
                 </Button>
             )}
             {buttonType === "delete-text" && (
-                <Button type="primary" danger onClick={handleOnClick}>
+                <Button type="primary" size={size} danger onClick={handleOnClick}>
                     Delete
+                </Button>
+            )}
+            {buttonType === "edit-text" && (
+                <Button type="primary" ghost size={size} onClick={handleOnClick}>
+                    Edit
                 </Button>
             )}
 
