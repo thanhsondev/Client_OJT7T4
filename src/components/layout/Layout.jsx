@@ -34,7 +34,6 @@ export const Layout = () => {
             </div>
             <div
                style={{
-                  background: "blue",
                   flex: 1,
                   overflowY: "auto",
                   marginTop: spacing / 2,
