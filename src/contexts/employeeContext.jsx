@@ -55,9 +55,9 @@ const EmployeeContextProvider = ({children}) => {
 		}
 	}
 
-	const updateEmployee = async updatedEmp => {
+	const updateEmployee = async (updatedEmp, empId) => {
 		try {
-			const response = await axios.patch(`${apiUrl}/employees/update/${updatedEmp._id}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
+			const response = await axios.patch(`${apiUrl}/employees/update/${empId}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
 			if (response.data.success) {
 				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee })
 				return response.data
@@ -68,6 +68,18 @@ const EmployeeContextProvider = ({children}) => {
 				: { success: false, message: 'Server error' }
 		}
 	}
+
+    const getEmployeeById = async (id) => {
+        try {
+            const response = await axios.get(`${apiUrl}/employees/${id}`);
+            if (response.status === 200) {
+                dispatch({ type: 'EMPDETAILS_LOADED_SUCCESS', payload: response.data });
+            }
+        } catch (error) {
+            console.log(error);
+            dispatch({ type: 'EMPDETAILS_LOADED_FAIL' });
+        }
+    }
     
     const employeeContextData = {
         employeeState,
@@ -76,6 +88,7 @@ const EmployeeContextProvider = ({children}) => {
         createEmployee,
         deleteEmployee,
         updateEmployee,
+        getEmployeeById,
         showModal,
         setShowModal
     }

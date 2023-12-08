@@ -132,7 +132,7 @@ const Employees = () => {
             key: 'name',
             ...getColumnSearchProps(),
             render: (text, record) => (
-                <Link to={`/profile/${record._id}`}>
+                <Link to={`/employee/${record._id}`}>
                     {text}
                 </Link>
             ),

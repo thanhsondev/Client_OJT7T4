@@ -1,11 +1,22 @@
-import React, {useContext} from "react";
+import React, { useContext, useEffect, useCallback } from 'react';
 import { Radio } from "antd";
 import { ComponentsContext } from "../../contexts/componentsContext";
 
-const RadioCommon = ({ values }) => {
+const RadioCommon = ({ options, defaultValue }) => {
     const {
         setRadioItem
     } = useContext(ComponentsContext);
+
+    const setRadioItemsCallback = useCallback(
+        (value) => {
+            setRadioItem(value);
+        },
+        [setRadioItem]
+    );
+
+    useEffect(() => {
+        setRadioItemsCallback(defaultValue);
+    }, [setRadioItemsCallback, defaultValue]);
 
     const onChange = (radioValues) => {
         setRadioItem(radioValues.target.value);
@@ -14,7 +25,7 @@ const RadioCommon = ({ values }) => {
     
     return (
         <>
-            <Radio.Group options={values} onChange={onChange} />
+            <Radio.Group options={options} defaultValue={defaultValue} onChange={onChange} />
             <br />
         </>
 )};

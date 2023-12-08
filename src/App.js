@@ -6,6 +6,7 @@ import TechnicalContextProvider from './contexts/technicalContext';
 import ComponentsContextProvider from './contexts/componentsContext';
 
 import Employees from './pages/employee/employees';
+import EmployeeDetails from './pages/employee/employeeDetails';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/employee" element={<Employees />} />
+                  <Route path="/employee/:employeeId" element={<EmployeeDetails />} />
                 </Routes>
               </BrowserRouter>
             </div>

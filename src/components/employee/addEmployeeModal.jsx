@@ -127,7 +127,6 @@ const AddEmployeePage = () => {
     const [form] = Form.useForm();
 
     return (
-        <>
             <Modal 
                 title="Add new employee" 
                 open={showModal} 
@@ -240,11 +239,11 @@ const AddEmployeePage = () => {
                         label="Technicals"
                         valuePropName="checked"
                     >
-                        <Checkbox values={techOptions} />
+                        <Checkbox options={techOptions} />
                     </Form.Item>
 
                     <Form.Item label="Gender">
-                        <RadioButton values={genderOptions} />
+                        <RadioButton options={genderOptions} />
                     </Form.Item>
 
                     <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
@@ -252,7 +251,6 @@ const AddEmployeePage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-        </>
     )
 }
 
