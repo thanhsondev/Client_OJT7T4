@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     PlusOutlined,
     ReloadOutlined,
@@ -6,8 +6,12 @@ import {
     DeleteTwoTone
 } from "@ant-design/icons";
 import { Button, Flex } from "antd";
+import { ComponentsContext } from "../../contexts/componentsContext";
 
 const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) => {
+    const {
+        processing
+    } = useContext(ComponentsContext);
     return (
         <Flex gap="small" wrap="wrap" className="site-button-ghost-wrapper">
             {buttonType === "reload" && (
@@ -15,16 +19,6 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
             )}
             {buttonType === "add" && (
                 <Button shape="circle" icon={<PlusOutlined />} size={size} onClick={handleOnClick}/>
-            )}
-            {buttonType === "save" && (
-                <Button type="primary" size={size} onClick={handleOnClick}>
-                    Save
-                </Button>
-            )}
-            {buttonType === "cancel" && (
-                <Button onClick={handleOnClick}>
-                    Cancel
-                </Button>
             )}
             {buttonType === "edit" && (
                 <Button type="edit"
@@ -48,6 +42,21 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
             {buttonType === "edit-text" && (
                 <Button type="primary" ghost size={size} onClick={handleOnClick}>
                     Edit
+                </Button>
+            )}
+            {buttonType === "save" && (
+                <Button type="primary" size={size} onClick={handleOnClick}>
+                    Save
+                </Button>
+            )}
+            {buttonType === "cancel" && (
+                <Button onClick={handleOnClick}>
+                    Cancel
+                </Button>
+            )}
+            {buttonType === "loading" && (
+                <Button type="primary" loading>
+                    Loading
                 </Button>
             )}
 

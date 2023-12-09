@@ -20,7 +20,6 @@ const RadioCommon = ({ options, defaultValue }) => {
 
     const onChange = (radioValues) => {
         setRadioItem(radioValues.target.value);
-        console.log('selected = ', radioValues.target.value);
     };
     
     return (

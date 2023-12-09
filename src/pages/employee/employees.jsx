@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Table, Tag } from 'antd';
+import { Button, Input, Space, Table, Tag, Spin, Alert } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { ComponentsContext } from '../../contexts/componentsContext';
@@ -15,12 +15,16 @@ const Employees = () => {
     const {
         setShowModal,
         getEmployee,
-        employeeState: { employees },
+        employeeState: { employees, isLoading },
         deleteEmployee,
     } = useContext(EmployeeContext);
 
     const {
-        setShowConfirmModal
+        setShowConfirmModal,
+        alert,
+        setAlert,
+        alertMessage,
+        alertType
     } = useContext(ComponentsContext);
 
     const handleDetails = (record) => {
@@ -35,6 +39,10 @@ const Employees = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+
+    const onCloseAlert = () => {
+        setAlert(false);
+    };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -269,14 +277,43 @@ const Employees = () => {
         },
     ];
 
+    let body = null;
+    if (isLoading) {
+        body = (
+            <div className="spinner">
+                <Spin size="large" />
+            </div>
+        )
+    } else {
+        body = (
+            <Table columns={columns} dataSource={employees} pagination={{ pageSize: 6 }} rowKey="_id" />
+        )
+    }
+
     return (
         <>
             <ButtonCommon buttonType="add" handleOnClick={() => setShowModal(true)}>
                 Add Employee
             </ButtonCommon>
-            <Table columns={columns} dataSource={employees} pagination={{ pageSize: 6 }} rowKey="_id" />
+            {body}
             <AddModal />
             <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
+            {alert && (
+                <Alert
+                    message={alertMessage}
+                    type={alertType}
+                    showIcon
+                    closable
+                    onClose={onCloseAlert}
+                    style={{
+                        position: 'fixed',
+                        top: 20,
+                        right: 16,
+                        width: 300,
+                        zIndex: 1000,
+                    }}
+                />
+            )}
         </>
     );
 };

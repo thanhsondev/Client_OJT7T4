@@ -6,17 +6,17 @@ import TechnicalContextProvider from './contexts/technicalContext';
 import ComponentsContextProvider from './contexts/componentsContext';
 import LayoutContextProvider from './contexts/LayoutContext';
 
-import {Layout} from './components/layout/Layout';
-import {Dashboard} from './pages/dashboard/Dashboard';
+import { Layout } from './components/layout/Layout';
+import { Dashboard } from './pages/dashboard/Dashboard';
 import Employees from './pages/employee/employees';
 import EmployeeDetails from './pages/employee/employeeDetails';
 
 function App() {
    return (
       <LayoutContextProvider>
-         <EmployeeContextProvider>
+         <ComponentsContextProvider>
             <TechnicalContextProvider>
-               <ComponentsContextProvider>
+               <EmployeeContextProvider>
                   <Routes>
                      <Route path="/" element={<Layout />}>
                         <Route path="dashboard" element={<Dashboard />} />
@@ -26,9 +26,9 @@ function App() {
                         </Route>
                      </Route>
                   </Routes>
-               </ComponentsContextProvider>
+               </EmployeeContextProvider>
             </TechnicalContextProvider>
-         </EmployeeContextProvider>
+         </ComponentsContextProvider>
       </LayoutContextProvider>
    );
 }

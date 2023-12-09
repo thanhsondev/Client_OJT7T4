@@ -6,6 +6,10 @@ const ComponentsContextProvider = ({children}) => {
     const [checkedItems, setCheckedItems] = useState([]);
     const [radioItem, setRadioItem] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [processing, setProcessing] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertType, setAlertType] = useState("");
     
     const checkContextData = {
         checkedItems,
@@ -13,7 +17,15 @@ const ComponentsContextProvider = ({children}) => {
         radioItem,
         setRadioItem,
         showConfirmModal,
-        setShowConfirmModal
+        setShowConfirmModal,
+        processing,
+        setProcessing,
+        alert,
+        setAlert,
+        alertMessage,
+        setAlertMessage,
+        alertType,
+        setAlertType
     }
 
     return (

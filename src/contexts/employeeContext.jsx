@@ -1,7 +1,9 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useReducer, useState, useContext } from "react";
 import { employeeReducer } from "../reducers/employeeReducer"
 import { apiUrl } from "./constants";
 import axios from "axios";
+
+import { ComponentsContext } from "./componentsContext";
 
 export const EmployeeContext = createContext()
 
@@ -11,6 +13,13 @@ const EmployeeContextProvider = ({children}) => {
         employees: [],
         isLoading: true
     });
+
+    const {
+        setProcessing,
+        setAlert,
+        setAlertMessage,
+        setAlertType,
+    } = useContext(ComponentsContext);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -35,10 +44,16 @@ const EmployeeContextProvider = ({children}) => {
         try {
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
-                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees})
+                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees});
+                setProcessing(false);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
                 return response.data
             }
         } catch (error) {
+            setProcessing(false);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
             return error.response.data
                 ? error.response.data
                 : { success: false, message: "Server error" };
@@ -49,9 +64,15 @@ const EmployeeContextProvider = ({children}) => {
 		try {
 			const response = await axios.patch(`${apiUrl}/employees/delete/${empId}`)
 			if (response.data.success)
-				dispatch({ type: 'DELETE_EMP', payload: empId })
+				dispatch({ type: 'DELETE_EMP', payload: empId });
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
 		} catch (error) {
-			console.log(error)
+			console.log(error);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
 		}
 	}
 
@@ -59,10 +80,18 @@ const EmployeeContextProvider = ({children}) => {
 		try {
 			const response = await axios.patch(`${apiUrl}/employees/update/${empId}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
 			if (response.data.success) {
-				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee })
+				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee });
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
 				return response.data
 			}
 		} catch (error) {
+            setProcessing(false);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
 			return error.response.data
 				? error.response.data
 				: { success: false, message: 'Server error' }
