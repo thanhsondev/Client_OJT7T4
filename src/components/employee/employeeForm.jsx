@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
 import { Form, Upload, message, Alert } from 'antd';
-import { Link } from "react-router-dom";
 
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
@@ -135,7 +134,6 @@ const EmployeeForm = (employee) => {
     return (
         <>
         <div>
-        <Link to="/employee">Back</Link>
         <h1 style={{textAlign: "center"}}>{employee.employee.name.toUpperCase()}</h1>
         </div>
         <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()}/>

@@ -196,38 +196,8 @@ const Employees = () => {
                 <>
                     {technical.map((tech) => {
                         let techName = tech.name;
-                        let color;
-                        switch (techName) {
-                            case 'Java':
-                                color = 'geekblue';
-                                break;
-                            case 'Javascript':
-                                color = 'gold';
-                                break;
-                            case 'PHP':
-                                color = 'purple';
-                                break;
-                            case 'Python':
-                                color = 'green';
-                                break;
-                            case 'ReactJs':
-                                color = 'cyan';
-                                break;
-                            case 'HTML':
-                                color = 'magenta';
-                                break;
-                            case 'CSS':
-                                color = 'Gray';
-                                break;
-                            case 'NodeJs':
-                                color = 'lime';
-                                break;
-                            default:
-                                color = 'red';
-                        }
-
                         return (
-                            <Tag color={color} key={techName}>
+                            <Tag color={'blue'} key={techName}>
                                 {techName}
                             </Tag>
                         );
