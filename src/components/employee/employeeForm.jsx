@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { Form, Upload, message } from 'antd';
+import { Form, Upload, message, Select } from 'antd';
 import { Link } from "react-router-dom";
 
 import { EmployeeContext } from '../../contexts/employeeContext';
@@ -11,6 +11,8 @@ import Checkbox from '../inputs/CheckBoxCommon';
 import RadioButton from '../inputs/RadioCommon';
 import Button from '../buttons/ButtonCommon';
 
+import countryCode from '../../JsonData/CountryCodes.json';
+
 const EmployeeForm = (employee) => {
     const { updateEmployee } = useContext(EmployeeContext);
 
@@ -21,8 +23,9 @@ const EmployeeForm = (employee) => {
 
     const {
         checkedItems,
-        setCheckedItems,
-        radioItem
+        radioItem,
+        processing,
+        setProcessing
     } = useContext(ComponentsContext);
 
     
@@ -44,22 +47,82 @@ const EmployeeForm = (employee) => {
         setIsEditing(!isEditing);
     };
 
+    let phoneOptions = [];
+    countryCode.map(country => (
+        phoneOptions.push(
+            {
+                label: country.name,
+                value: country.dial_code,
+            }
+        )
+    ))
+    const phoneNumber = employee.employee.phone;
+
+    const defaultDialCode = phoneNumber.slice(0, 3); 
+    const actualNumber = phoneNumber.slice(3);
+
+    const [dialCode, setDialCode] = useState(defaultDialCode);
+
+    const handlePhoneChange = (value) => {
+        setDialCode(value);
+    };
+
+    const selectPhone = (
+        <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue={dialCode} />
+    );
+
+    const validatePhoneNumber = (phoneNumber) => {
+        const phoneRegex = /^\d{9,12}$/;
+        return phoneRegex.test(phoneNumber);
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     const onFinish = async () => {
         try {
             const formData = new FormData();
+
             if (imgFile) {
                 formData.append("image", imgFile);
             }
+
+            if (!validatePhoneNumber(form.getFieldValue("phone"))) {
+                form.setFields([
+                    {
+                        name: "phone",
+                        errors: ["Please enter a valid phone number (10 digits)"],
+                    },
+                ]);
+                return;
+            }
+    
+            if (!validateEmail(form.getFieldValue("email"))) {
+                form.setFields([
+                    {
+                        name: "email",
+                        errors: ["Please enter a valid email address"],
+                    },
+                ]);
+                return;
+            }
+
             formData.append("name", form.getFieldValue("name"));
             formData.append("code", form.getFieldValue("code"));
-            formData.append("phone", form.getFieldValue("phone"));
+            formData.append("phone",dialCode + form.getFieldValue("phone"));
             formData.append("email", form.getFieldValue("email"));
             formData.append("identity", form.getFieldValue("identity"));
             formData.append("gender", radioItem);
             formData.append("technical", JSON.stringify(checkedItems));
 
             updateEmployee(formData, employee.employeeId);
-            setIsEditing(!isEditing);
+            setProcessing(true);
+
+            if (processing === false) {
+                setIsEditing(!isEditing);
+            }
 
         } catch (error) {
             console.error('Validation failed:', error);
@@ -220,7 +283,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput defaultValue={employee.employee.phone} />
+                    <TextInput addonBefore={selectPhone} prefix={dialCode} defaultValue={actualNumber} />
                 </Form.Item>
 
                 <Form.Item
@@ -261,7 +324,11 @@ const EmployeeForm = (employee) => {
                 </Form.Item>
 
                 <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                    <Button buttonType={"save"} handleOnClick={() => form.submit()} />
+                    {processing === true ?
+                        (<Button buttonType={"loading"} />)
+                        :
+                        (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                    }
                 </Form.Item>
             </Form>
         </>

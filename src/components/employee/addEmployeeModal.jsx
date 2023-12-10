@@ -5,10 +5,12 @@ import { ComponentsContext } from '../../contexts/componentsContext'
 
 import { Form, Upload, message, Modal, Col, Row, Select } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import TextInput from '../inputs/InputTextCommon'
-import Checkbox from '../inputs/CheckBoxCommon'
-import RadioButton from '../inputs/RadioCommon'
-import Button from '../buttons/ButtonCommon'
+import TextInput from '../inputs/InputTextCommon';
+import Checkbox from '../inputs/CheckBoxCommon';
+import RadioButton from '../inputs/RadioCommon';
+import Button from '../buttons/ButtonCommon';
+
+import countryCode from '../../JsonData/CountryCodes.json';
 
 const AddEmployeePage = () => {
     const {
@@ -28,8 +30,7 @@ const AddEmployeePage = () => {
         radioItem,
         setRadioItem,
         processing,
-        setProcessing,
-        setAlert
+        setProcessing
     } = useContext(ComponentsContext);
 
     useEffect(() => { getTechnicals() }, [])
@@ -59,10 +60,15 @@ const AddEmployeePage = () => {
         },
     ]
 
-    const phoneOptions = [
-        { value: '+84', label: 'VN' },
-        { value: '+81', label: 'JP' },
-    ]
+    let phoneOptions = [];
+    countryCode.map(country => (
+        phoneOptions.push(
+            {
+                label: country.name,
+                value: country.dial_code,
+            }
+        )
+    ))
 
     const [dialCode, setDialCode] = useState("+84");
 
@@ -71,11 +77,11 @@ const AddEmployeePage = () => {
     };
 
     const selectPhone = (
-        <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue="+84"/>
+        <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue={dialCode} />
     );
 
     const validatePhoneNumber = (phoneNumber) => {
-        const phoneRegex = /^[0-9]{10}$/;
+        const phoneRegex = /^\d{9,12}$/;
         return phoneRegex.test(phoneNumber);
     };
 
@@ -85,11 +91,17 @@ const AddEmployeePage = () => {
     };
 
     const onFinish = (values) => {
+        const formData = new FormData();
+
+        if (imgFile) {
+            formData.append("image", imgFile);
+        }
+
         if (!validatePhoneNumber(form.getFieldValue("phone"))) {
             form.setFields([
                 {
                     name: "phone",
-                    errors: ["Please enter a valid phone number (10 digits)"],
+                    errors: ["Please enter a valid phone number (9 - 12 digits)"],
                 },
             ]);
             return;
@@ -105,8 +117,6 @@ const AddEmployeePage = () => {
             return;
         }
 
-        const formData = new FormData()
-        formData.append("image", imgFile);
         formData.append("name", form.getFieldValue("name"));
         formData.append("code", form.getFieldValue("code"));
         formData.append("phone", dialCode + form.getFieldValue("phone"));
@@ -123,12 +133,6 @@ const AddEmployeePage = () => {
             form.resetFields();
             setCheckedItems([]);
             setRadioItem(null);
-
-            setAlert(true);
-
-            setTimeout(() => {
-                setAlert(false);
-            }, 3000);
         }
     };
 
@@ -208,30 +212,40 @@ const AddEmployeePage = () => {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >
-                <Form.Item valuePropName="image" getValueFromEvent={imageUrl}>
-                    <Upload
-                        name="image"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                        beforeUpload={beforeUpload}
-                        onChange={handleChange}
-                    >
-                        {imageUrl ? (
-                            <img
-                                src={imageUrl}
-                                alt="avatar"
-                                style={{
-                                    width: '100%',
-                                }}
-                            />
-                        ) : (
-                            uploadButton
-                        )}
-                    </Upload>
+                <Row>
+                    <Col span={12}>
+                        <Form.Item valuePropName="image" getValueFromEvent={imageUrl}>
+                            <Upload
+                                name="image"
+                                listType="picture-card"
+                                className="avatar-uploader"
+                                showUploadList={false}
+                                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                                beforeUpload={beforeUpload}
+                                onChange={handleChange}
+                            >
+                                {imageUrl ? (
+                                    <img
+                                        src={imageUrl}
+                                        alt="avatar"
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    />
+                                ) : (
+                                    uploadButton
+                                )}
+                            </Upload>
 
-                </Form.Item>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Gender">
+                            <RadioButton options={genderOptions} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
 
                 <Row>
                     <Col span={12}>
@@ -267,16 +281,16 @@ const AddEmployeePage = () => {
                 <Row>
                     <Col span={12}>
                         <Form.Item
-                            label="Phone number"
-                            name="phone"
+                            label="Employee code"
+                            name="code"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Enter phone number',
+                                    message: 'Enter employee code',
                                 },
                             ]}
                         >
-                            <TextInput addonBefore={selectPhone} />
+                            <TextInput />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -295,29 +309,18 @@ const AddEmployeePage = () => {
                     </Col>
                 </Row>
 
-                <Row>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Employee code"
-                            name="code"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Enter employee code',
-                                },
-                            ]}
-                        >
-                            <TextInput />
-                        </Form.Item>
-                    </Col>
-                    <Col span={3}></Col>
-                    <Col span={9}>
-                        <Form.Item label="Gender">
-                            <RadioButton options={genderOptions} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-
+                <Form.Item
+                    label="Phone number"
+                    name="phone"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Enter phone number',
+                        },
+                    ]}
+                >
+                    <TextInput addonBefore={selectPhone} prefix={dialCode} />
+                </Form.Item>
 
                 <Form.Item
                     label="Technicals"
