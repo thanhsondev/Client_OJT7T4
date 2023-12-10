@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Table, Tag, Spin, Alert } from 'antd';
+import { Button, Input, Space, Table, Tag, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { ComponentsContext } from '../../contexts/componentsContext';
@@ -8,7 +8,8 @@ import { EmployeeContext } from '../../contexts/employeeContext';
 
 import ButtonCommon from '../../components/buttons/ButtonCommon';
 import AddModal from '../../components/employee/addEmployeeModal';
-import ConfirmModal from '../../components/Modal/ConfirmModal'
+import ConfirmModal from '../../components/Modal/ConfirmModal';
+import Alert from '../../components/alerts/alertCommon'
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -21,10 +22,7 @@ const Employees = () => {
 
     const {
         setShowConfirmModal,
-        alert,
-        setAlert,
-        alertMessage,
-        alertType
+        alert
     } = useContext(ComponentsContext);
 
     const handleDetails = (record) => {
@@ -39,10 +37,6 @@ const Employees = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
-
-    const onCloseAlert = () => {
-        setAlert(false);
-    };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -241,7 +235,7 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
-                    <ButtonCommon buttonType="delete" handleOnClick={() => {setShowConfirmModal(true); setEmpId(record._id);}} />
+                    <ButtonCommon buttonType="delete" handleOnClick={() => { setShowConfirmModal(true); setEmpId(record._id); }} />
                 </Space>
             ),
         },
@@ -267,22 +261,9 @@ const Employees = () => {
             </ButtonCommon>
             {body}
             <AddModal />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
+            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
             {alert && (
-                <Alert
-                    message={alertMessage}
-                    type={alertType}
-                    showIcon
-                    closable
-                    onClose={onCloseAlert}
-                    style={{
-                        position: 'fixed',
-                        top: 20,
-                        right: 16,
-                        width: 300,
-                        zIndex: 1000,
-                    }}
-                />
+                <Alert />
             )}
         </>
     );

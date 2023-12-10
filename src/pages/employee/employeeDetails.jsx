@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
-import { Alert } from 'antd';
-
 import EmployeeForm from '../../components/employee/employeeForm'
+import Alert from '../../components/alerts/alertCommon'
 
 const EmployeeDetails = () => {
   const {
@@ -19,15 +18,8 @@ const EmployeeDetails = () => {
   }, [employee]);
 
   const {
-    alert,
-    setAlert,
-    alertMessage,
-    alertType
+    alert
   } = useContext(ComponentsContext);
-
-  const onCloseAlert = () => {
-    setAlert(false);
-  };
 
   return (
     <>
@@ -35,20 +27,7 @@ const EmployeeDetails = () => {
         {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
       </div>
       {alert && (
-        <Alert
-          message={alertMessage}
-          type={alertType}
-          showIcon
-          closable
-          onClose={onCloseAlert}
-          style={{
-            position: 'fixed',
-            top: 20,
-            right: 16,
-            width: 300,
-            zIndex: 1000,
-          }}
-        />
+        <Alert />
       )}
     </>
   );

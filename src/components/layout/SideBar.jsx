@@ -1,9 +1,11 @@
 import React from "react";
 import { AppstoreOutlined, PieChartOutlined, TeamOutlined } from "@ant-design/icons";
 import { Avatar, Menu } from "antd";
+import { useNavigate } from 'react-router-dom';
 // import { LayoutContext } from "../../contexts/LayoutContext";
 
 export const Sidebar = () => {
+   const navigate = useNavigate();
    function getItem(label, key, icon, children, type) {
       return {
          key,
@@ -16,24 +18,26 @@ export const Sidebar = () => {
    const items = [
       getItem(
          "Dashboard",
-         "Dashboard",
+         "dashboard",
          <PieChartOutlined style={{ fontSize: "22px" }} />
       ),
       getItem(
          "Project Management",
          "Projects",
          <AppstoreOutlined style={{ fontSize: "22px" }} />,
-         [getItem("All Project", "1"), getItem("Add Project", "2")]
+         [getItem("All Project", "projects"), getItem("Add Project", "addProject")]
       ),
       getItem(
          "Employees Management",
          "Employees",
          <TeamOutlined style={{ fontSize: "22px" }} />,
-         [getItem("All Employees", "3"), getItem("Add Employees", "4")]
+         [getItem("All Employees", "employee"), getItem("Add Employees", "addEmployee")]
       ),
    ];
    const onClick = (e) => {
-      console.log("click ", e);
+      console.log("click ", e.keyPath[0]);
+      const path = e.keyPath[0];
+      navigate(`/${path}`);
    };
    const Username = (props) => {
       return <p style={{ fontWeight: "700", fontSize: "x-large" }}>{props.name}</p>;
