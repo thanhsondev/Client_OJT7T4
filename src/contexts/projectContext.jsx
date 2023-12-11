@@ -13,7 +13,9 @@ const ProjectContextProvider = ({ children }) => {
         isLoading: true
     });
 
-    const [showModal, setShowModal] = useState(false);
+    const [addProjectModal, setAddProjecrModal] = useState(false);
+    const [addEmployeeModal, setAddEmployeeModal] = useState(false);
+    const [employeeDetailsModal, setEmployeeDetailsModal] = useState(false);
 
     const getProjects = async () => {
         try {
@@ -129,8 +131,12 @@ const ProjectContextProvider = ({ children }) => {
         getEmployeesInProject,
         addEmployeeToProject,
         removeEmployeeFromProject,
-        showModal,
-        setShowModal
+        addProjectModal,
+        setAddProjecrModal,
+        addEmployeeModal,
+        setAddEmployeeModal,
+        employeeDetailsModal,
+        setEmployeeDetailsModal
     }
 
    return (
