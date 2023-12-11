@@ -1,24 +1,39 @@
 import { Outlet } from "react-router-dom";
-import React from "react";
+import React, {useContext} from "react";
 import { Sidebar } from "./SideBar";
 import { NavBar } from "./NavBar";
+import { LayoutContext } from "../../contexts/LayoutContext";
 const spacing = 10;
 
 export const Layout = () => {
+   const { layout, setLayout } = useContext(LayoutContext);
    return (
       <div
          className="w-full h-screen"
          style={{ display: "flex", justifyContent: "space-between" }}
       >
          {/* SIDE BAR */}
-         <div
+         {layout ? <div
             style={{
                height: "100%",
                marginRight: spacing / 2,
+               background: "#ebebeb",
+               width: "5vw",
+               transition: "width 0.3s ease-in-out"
             }}
          >
             <Sidebar />
-         </div>
+         </div> : <div
+            style={{
+               height: "100%",
+               marginRight: spacing / 2,
+               background: "#ebebeb",
+               width: "16vw",
+               transition: "width 0.3s ease-in-out"
+            }}
+         >
+            <Sidebar />
+         </div>}
          {/* HEADER & CONTENT */}
          <div
             style={{
@@ -28,7 +43,7 @@ export const Layout = () => {
                marginLeft: spacing / 2,
             }}
          >
-            <div style={{ marginBottom: spacing / 2 }}>
+            <div style={{ marginBottom: spacing / 2,  background: "#ebebeb"}}>
                <NavBar />
             </div>
             <div

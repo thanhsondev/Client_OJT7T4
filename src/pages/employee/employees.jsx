@@ -17,6 +17,8 @@ const Employees = () => {
         getEmployee,
         employeeState: { employees, isLoading },
         deleteEmployee,
+        searchEmployee,
+        searchString
     } = useContext(EmployeeContext);
 
     const {
@@ -32,8 +34,14 @@ const Employees = () => {
     };
 
     useEffect(() => {
-        getEmployee();
-    }, []);
+        if (searchString === '') {
+            getEmployee();
+        } else {
+            console.log(searchString);
+            searchEmployee(searchString);
+        }
+    }, [searchString])
+
 
     const [empId, setEmpId] = useState('');
     const [searchText, setSearchText] = useState('');
@@ -271,7 +279,7 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
-                    <ButtonCommon buttonType="delete" handleOnClick={() => {setShowConfirmModal(true); setEmpId(record._id);}} />
+                    <ButtonCommon buttonType="delete" handleOnClick={() => { setShowConfirmModal(true); setEmpId(record._id); }} />
                 </Space>
             ),
         },
@@ -297,7 +305,7 @@ const Employees = () => {
             </ButtonCommon>
             {body}
             <AddModal />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
+            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
             {alert && (
                 <Alert
                     message={alertMessage}
