@@ -50,6 +50,11 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
                     Edit
                 </Button>
             )}
+            {buttonType === "details" && (
+                <Button type="primary" ghost size={size} onClick={handleOnClick}>
+                    Details
+                </Button>
+            )}
 
         </Flex>
 

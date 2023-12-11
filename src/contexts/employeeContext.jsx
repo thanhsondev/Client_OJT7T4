@@ -9,6 +9,7 @@ const EmployeeContextProvider = ({children}) => {
     const [employeeState, dispatch] = useReducer(employeeReducer, {
         employee: null,
         employees: [],
+        histories: [],
         isLoading: true
     });
 
@@ -80,6 +81,18 @@ const EmployeeContextProvider = ({children}) => {
             dispatch({ type: 'EMPDETAILS_LOADED_FAIL' });
         }
     }
+
+    const getEmployeeHistories = async (empId) => {
+        try {
+        const response = await axios.get(`${apiUrl}/employees/history/${empId}`)
+        if (response.status === 200) {
+            dispatch({type: 'HISTORY_LOADED_SUCCESS', payload: response.data.histories});
+        }
+        } catch (error) {
+            console.log(error);
+            dispatch({type: 'HISTORY_LOADED_FAIL'});
+        }
+    }
     
     const employeeContextData = {
         employeeState,
@@ -89,6 +102,7 @@ const EmployeeContextProvider = ({children}) => {
         deleteEmployee,
         updateEmployee,
         getEmployeeById,
+        getEmployeeHistories,
         showModal,
         setShowModal
     }
