@@ -18,6 +18,7 @@ const Employees = () => {
         getEmployee,
         employeeState: { employees, isLoading },
         deleteEmployee,
+        findEmployee,
     } = useContext(EmployeeContext);
 
     const {
@@ -26,6 +27,7 @@ const Employees = () => {
     } = useContext(ComponentsContext);
 
     const handleDetails = (record) => {
+        findEmployee(record._id);
         navigate(`/employee/${record._id}`);
     };
 
@@ -134,7 +136,7 @@ const Employees = () => {
             key: 'name',
             ...getColumnSearchProps(),
             render: (text, record) => (
-                <Link to={`/employee/${record._id}`}>
+                <Link to={`/employee/${record._id}`} onClick={() => handleDetails(record)}>
                     {text}
                 </Link>
             ),

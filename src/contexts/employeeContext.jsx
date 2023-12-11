@@ -45,13 +45,19 @@ const EmployeeContextProvider = ({children}) => {
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
                 dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees});
-                setProcessing(false);
+                setTimeout(() => {
+                    setProcessing(false);
+                }, 2000);
+                setAlert(true);
                 setAlertMessage(response.data.message);
                 setAlertType("success");
                 return response.data
             }
         } catch (error) {
-            setProcessing(false);
+            setTimeout(() => {
+                setProcessing(false);
+            }, 2000);
+            setAlert(true);
             setAlertMessage(error.response.data.message);
             setAlertType("error");
             return error.response.data
@@ -81,14 +87,18 @@ const EmployeeContextProvider = ({children}) => {
 			const response = await axios.patch(`${apiUrl}/employees/update/${empId}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
 			if (response.data.success) {
 				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee });
-                setProcessing(false);
+                setTimeout(() => {
+                    setProcessing(false);
+                }, 2000);
                 setAlert(true);
                 setAlertMessage(response.data.message);
                 setAlertType("success");
 				return response.data
 			}
 		} catch (error) {
-            setProcessing(false);
+            setTimeout(() => {
+                setProcessing(false);
+            }, 2000);
             setAlert(true);
             setAlertMessage(error.response.data.message);
             setAlertType("error");

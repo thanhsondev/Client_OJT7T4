@@ -200,6 +200,7 @@ const AddEmployeePage = () => {
             footer={null}
             onCancel={handleCancel}
             centered
+            width={1000}
         >
             <Form
                 form={form}

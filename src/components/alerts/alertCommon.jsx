@@ -15,7 +15,7 @@ const AlertCommon = () => {
 
     setTimeout(() => {
         setAlert(false);
-    }, 3000);
+    }, 5000);
 
     return (
         <>
@@ -27,9 +27,10 @@ const AlertCommon = () => {
                 onClose={onCloseAlert}
                 style={{
                     position: 'fixed',
-                    top: 20,
-                    right: 16,
-                    width: 300,
+                    bottom: 20,
+                    left: 16,
+                    width: 310,
+                    height: 90,
                     zIndex: 1000,
                 }}
             />

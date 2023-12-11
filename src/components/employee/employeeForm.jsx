@@ -206,7 +206,7 @@ const EmployeeForm = (employee) => {
                     remember: true,
                     name: employee.employee.name,
                     code: employee.employee.code,
-                    phone: employee.employee.phone,
+                    phone: actualNumber,
                     email: employee.employee.email,
                     identity: employee.employee.identity,
                 }}
@@ -257,7 +257,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput defaultValue={employee.employee.name} />
+                    <TextInput />
                 </Form.Item>
 
                 <Form.Item
@@ -270,7 +270,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput defaultValue={employee.employee.code} />
+                    <TextInput />
                 </Form.Item>
 
                 <Form.Item
@@ -283,7 +283,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput addonBefore={selectPhone} prefix={dialCode} defaultValue={actualNumber} />
+                    <TextInput addonBefore={selectPhone} prefix={dialCode} />
                 </Form.Item>
 
                 <Form.Item
@@ -296,7 +296,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput defaultValue={employee.employee.email} />
+                    <TextInput />
                 </Form.Item>
 
                 <Form.Item
@@ -309,7 +309,7 @@ const EmployeeForm = (employee) => {
                         },
                     ]}
                 >
-                    <TextInput defaultValue={employee.employee.identity} />
+                    <TextInput />
                 </Form.Item>
 
                 <Form.Item
