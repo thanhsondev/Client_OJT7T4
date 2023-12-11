@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
 import { Form, Upload, message, Select } from 'antd';
-import { Link } from "react-router-dom";
 
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
@@ -28,7 +27,7 @@ const EmployeeForm = (employee) => {
         setProcessing
     } = useContext(ComponentsContext);
 
-    
+
     useEffect(() => {
         getTechnicals();
     }, []);
@@ -58,7 +57,7 @@ const EmployeeForm = (employee) => {
     ))
     const phoneNumber = employee.employee.phone;
 
-    const defaultDialCode = phoneNumber.slice(0, 3); 
+    const defaultDialCode = phoneNumber.slice(0, 3);
     const actualNumber = phoneNumber.slice(3);
 
     const [dialCode, setDialCode] = useState(defaultDialCode);
@@ -98,7 +97,7 @@ const EmployeeForm = (employee) => {
                 ]);
                 return;
             }
-    
+
             if (!validateEmail(form.getFieldValue("email"))) {
                 form.setFields([
                     {
@@ -111,7 +110,7 @@ const EmployeeForm = (employee) => {
 
             formData.append("name", form.getFieldValue("name"));
             formData.append("code", form.getFieldValue("code"));
-            formData.append("phone",dialCode + form.getFieldValue("phone"));
+            formData.append("phone", dialCode + form.getFieldValue("phone"));
             formData.append("email", form.getFieldValue("email"));
             formData.append("identity", form.getFieldValue("identity"));
             formData.append("gender", radioItem);
@@ -144,7 +143,7 @@ const EmployeeForm = (employee) => {
     ))
 
 
-    
+
 
     const genderOptions = [
         {
@@ -194,143 +193,146 @@ const EmployeeForm = (employee) => {
     return (
         <>
             <div>
-                <Link to="/employee">Back</Link>
+                <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
+            </div>
+            <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
                 <h1 style={{ textAlign: "center" }}>{employee.employee.name.toUpperCase()}</h1>
             </div>
-            <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
-            <Form
-                form={form}
-                name="add employee"
-                layout="vertical"
-                initialValues={{
-                    remember: true,
-                    name: employee.employee.name,
-                    code: employee.employee.code,
-                    phone: actualNumber,
-                    email: employee.employee.email,
-                    identity: employee.employee.identity,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                disabled={!isEditing}
-            >
-                <Form.Item valuePropName="image" getValueFromEvent={imageUrl}>
-                    <Upload
-                        name="image"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                        beforeUpload={beforeUpload}
-                        onChange={handleChange}
+            <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
+                <Form
+                    form={form}
+                    name="add employee"
+                    layout="vertical"
+                    initialValues={{
+                        remember: true,
+                        name: employee.employee.name,
+                        code: employee.employee.code,
+                        phone: actualNumber,
+                        email: employee.employee.email,
+                        identity: employee.employee.identity,
+                    }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                    disabled={!isEditing}
+                >
+                    <Form.Item valuePropName="image" getValueFromEvent={imageUrl}>
+                        <Upload
+                            name="image"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                            beforeUpload={beforeUpload}
+                            onChange={handleChange}
 
+                        >
+                            {imageUrl ? (
+                                <img
+                                    src={imageUrl}
+                                    alt="avatar"
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                />
+                            ) : (
+                                <img
+                                    src={employee.employee.image}
+                                    alt="avatar"
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                />
+                            )}
+                        </Upload>
+
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Full Name"
+                        name="name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Enter employee name',
+                            },
+                        ]}
                     >
-                        {imageUrl ? (
-                            <img
-                                src={imageUrl}
-                                alt="avatar"
-                                style={{
-                                    width: '100%',
-                                }}
-                            />
-                        ) : (
-                            <img
-                                src={employee.employee.image}
-                                alt="avatar"
-                                style={{
-                                    width: '100%',
-                                }}
-                            />
-                        )}
-                    </Upload>
+                        <TextInput />
+                    </Form.Item>
 
-                </Form.Item>
+                    <Form.Item
+                        label="Employee code"
+                        name="code"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Enter employee code',
+                            },
+                        ]}
+                    >
+                        <TextInput />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Full Name"
-                    name="name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter employee name',
-                        },
-                    ]}
-                >
-                    <TextInput />
-                </Form.Item>
+                    <Form.Item
+                        label="Phone number"
+                        name="phone"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Enter phone number',
+                            },
+                        ]}
+                    >
+                        <TextInput addonBefore={selectPhone} prefix={dialCode} />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Employee code"
-                    name="code"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter employee code',
-                        },
-                    ]}
-                >
-                    <TextInput />
-                </Form.Item>
+                    <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Enter email',
+                            },
+                        ]}
+                    >
+                        <TextInput />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Phone number"
-                    name="phone"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter phone number',
-                        },
-                    ]}
-                >
-                    <TextInput addonBefore={selectPhone} prefix={dialCode} />
-                </Form.Item>
+                    <Form.Item
+                        label="Identity code"
+                        name="identity"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Enter identity code',
+                            },
+                        ]}
+                    >
+                        <TextInput />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter email',
-                        },
-                    ]}
-                >
-                    <TextInput />
-                </Form.Item>
+                    <Form.Item
+                        label="Technicals"
+                        valuePropName="checked"
+                    >
+                        <Checkbox options={techOptions} defaultValue={defaultCheckedList} />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Identity code"
-                    name="identity"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter identity code',
-                        },
-                    ]}
-                >
-                    <TextInput />
-                </Form.Item>
+                    <Form.Item label="Gender">
+                        <RadioButton options={genderOptions} defaultValue={employee.employee.gender} />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Technicals"
-                    valuePropName="checked"
-                >
-                    <Checkbox options={techOptions} defaultValue={defaultCheckedList}/>
-                </Form.Item>
-
-                <Form.Item label="Gender">
-                    <RadioButton options={genderOptions} defaultValue={employee.employee.gender} />
-                </Form.Item>
-
-                <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                    {processing === true ?
-                        (<Button buttonType={"loading"} />)
-                        :
-                        (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
-                    }
-                </Form.Item>
-            </Form>
+                    <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
+                        {processing === true ?
+                            (<Button buttonType={"loading"} />)
+                            :
+                            (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                        }
+                    </Form.Item>
+                </Form>
+            </div>
         </>
     );
 }

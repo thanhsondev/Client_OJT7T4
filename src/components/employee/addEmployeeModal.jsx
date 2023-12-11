@@ -201,6 +201,7 @@ const AddEmployeePage = () => {
             onCancel={handleCancel}
             centered
             width={1000}
+            closable={false}
         >
             <Form
                 form={form}
@@ -249,7 +250,7 @@ const AddEmployeePage = () => {
 
 
                 <Row>
-                    <Col span={12}>
+                    <Col span={11}>
                         <Form.Item
                             label="Full Name"
                             name="name"
@@ -263,7 +264,8 @@ const AddEmployeePage = () => {
                             <TextInput />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={2}></Col>
+                    <Col span={11}>
                         <Form.Item
                             label="Identity code"
                             name="identity"
@@ -280,7 +282,7 @@ const AddEmployeePage = () => {
                 </Row>
 
                 <Row>
-                    <Col span={12}>
+                    <Col span={11}>
                         <Form.Item
                             label="Employee code"
                             name="code"
@@ -294,7 +296,8 @@ const AddEmployeePage = () => {
                             <TextInput />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={2}></Col>
+                    <Col span={11}>
                         <Form.Item
                             label="Email"
                             name="email"
@@ -310,18 +313,25 @@ const AddEmployeePage = () => {
                     </Col>
                 </Row>
 
-                <Form.Item
-                    label="Phone number"
-                    name="phone"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Enter phone number',
-                        },
-                    ]}
-                >
-                    <TextInput addonBefore={selectPhone} prefix={dialCode} />
-                </Form.Item>
+                <Row>
+                    {/* <Col span={2}></Col> */}
+                    <Col span={14}>
+                        <Form.Item
+                            label="Phone number"
+                            name="phone"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Enter phone number',
+                                },
+                            ]}
+                        >
+                            <TextInput addonBefore={selectPhone} prefix={dialCode} />
+                        </Form.Item>
+                    </Col>
+                    {/* <Col span={2}></Col> */}
+                </Row>
+
 
                 <Form.Item
                     label="Technicals"
@@ -330,15 +340,23 @@ const AddEmployeePage = () => {
                     <Checkbox options={techOptions} />
                 </Form.Item>
 
-
-                <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                    {processing === true ?
-                        (<Button buttonType={"loading"} />)
-                        :
-                        (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
-                    }
-
-                </Form.Item>
+                <Row>
+                    <Col span={16}></Col>
+                    <Col span={2}>
+                        <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
+                            <Button buttonType={"cancel"} handleOnClick={() => handleCancel()} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={2}>
+                        <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
+                            {processing === true ?
+                                (<Button buttonType={"loading"} />)
+                                :
+                                (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                            }
+                        </Form.Item>
+                    </Col>
+                </Row>
 
             </Form>
         </Modal>

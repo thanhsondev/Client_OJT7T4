@@ -1,10 +1,11 @@
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
-import EmployeeForm from '../../components/employee/employeeForm'
-import Alert from '../../components/alerts/alertCommon'
+import EmployeeForm from '../../components/employee/employeeForm';
+import Alert from '../../components/alerts/alertCommon';
+import Button from '../../components/buttons/ButtonCommon';
 
 const EmployeeDetails = () => {
   const {
@@ -23,7 +24,10 @@ const EmployeeDetails = () => {
 
   return (
     <>
-      <div style={{ width: "100%" }}>
+      <div>
+        <Link to="/employee">Back</Link>
+      </div>
+      <div>
         {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
       </div>
       {alert && (

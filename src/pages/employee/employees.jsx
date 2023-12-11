@@ -258,7 +258,7 @@ const Employees = () => {
 
     return (
         <>
-            <ButtonCommon buttonType="add" handleOnClick={() => setShowModal(true)}>
+            <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)}>
                 Add Employee
             </ButtonCommon>
             {body}
