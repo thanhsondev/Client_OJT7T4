@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Table, Space } from 'antd';
-import ButtonCommon from '../../components/buttons/ButtonCommon';
-import ConfirmModal from '../../components/Modal/ConfirmModal';
+import ButtonCommon from '../buttons/ButtonCommon';
+import ConfirmModal from '../Modal/ConfirmModal';
 import EmployeeInProjectModal from './employeeInProjectModal';
 import { ComponentsContext } from '../../contexts/componentsContext';
 import { ProjectContext } from '../../contexts/projectContext';
@@ -35,9 +35,9 @@ const EmployeeInProject = (employeesInProject) => {
         {
             title: 'Name',
             dataIndex: 'employeeId',
-            key: 'employeeName',
+            key: 'name',
             render: (_, { employeeId }) => (
-                <p>{employeeId.name}</p>
+                <p key={employeeId._id}>{employeeId.name}</p>
             )
         },
         {
@@ -45,7 +45,7 @@ const EmployeeInProject = (employeesInProject) => {
             dataIndex: 'role',
             key: 'role',
             render: (_, { role }) => (
-                <p>{role.name}</p>
+                <p key={role._id}>{role.name}</p>
             )
         },
         {
@@ -61,7 +61,8 @@ const EmployeeInProject = (employeesInProject) => {
     ];
 
     return (
-        <>    
+        <>
+            <h1>Employees in project</h1>
             <Table dataSource={empInPro} columns={columns} />
             <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm remove employee"} message={"Do you confirm to remove this employee from project?"} />
             {empDetails && <EmployeeInProjectModal empDetails={empDetails} />}

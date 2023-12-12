@@ -3,35 +3,40 @@ import { useParams } from 'react-router-dom';
 
 import { ProjectContext } from '../../contexts/projectContext';
 
-import EmployeeInProject from '../../components/employee/employeeInProject';
 import ButtonCommon from '../../components/buttons/ButtonCommon';
-import AssignEmployeeModal from '../../components/employee/assignEmployeeModal';
+import EmployeeInProject from '../../components/project/employeeInProject';
+import AssignEmployeeModal from '../../components/project/assignEmployeeModal';
+import ProjectForm from '../../components/project/projectForm';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
 
   const {
-    projectState: { employeesInProject, isLoading },
+    projectState: { employeesInProject, isLoading, project },
     getEmployeesInProject,
-    setAddEmployeeModal
+    setAddEmployeeModal,
+    findProject
   } = useContext(ProjectContext);
 
   useEffect(() => {
+    findProject(projectId);
     getEmployeesInProject(projectId);
-  }, [employeesInProject]);
+  }, []);
 
   return (
     <>
-
-      <div>
-        {projectId}
-        <ButtonCommon buttonType="add" handleOnClick={() => setAddEmployeeModal(true)}>
-          Add Employee
-        </ButtonCommon>
-        {employeesInProject && isLoading ? <p>Đang tải...</p> : <EmployeeInProject employeesInProject={employeesInProject} />}
+      <div style={{ display: "flex", width: "100%", justifyContent:"space-between"}}>
+        <div style={{ width: "45%"}}>
+          {project && <ProjectForm project={project} />}
+        </div>
+        <div style={{ width: "45%"}}>
+          <ButtonCommon buttonType="add" handleOnClick={() => setAddEmployeeModal(true)}>
+            Add Employee
+          </ButtonCommon>
+          {employeesInProject && isLoading ? <p>Đang tải...</p> : <EmployeeInProject employeesInProject={employeesInProject} />}
+        </div>
       </div>
-      <AssignEmployeeModal projectId={projectId}/>
-
+      <AssignEmployeeModal projectId={projectId} />
     </>
   );
 }

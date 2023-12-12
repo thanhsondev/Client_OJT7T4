@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
 import { Checkbox } from 'antd';
-import { ComponentsContext } from '../../contexts/componentsContext';
+// import { ComponentsContext } from '../../contexts/componentsContext';
 
-const CheckBoxCommon = ({ options, defaultValue }) => {
-    const { 
-        setCheckedItems 
-    } = useContext(ComponentsContext);
+const CheckBoxCommon = ({ ...props }) => {
+    // const { 
+    //     setCheckedItems 
+    // } = useContext(ComponentsContext);
 
-    const onChange = (checkedValues) => {
-        setCheckedItems(checkedValues);
-    };
+    // const onChange = (checkedValues) => {
+    //     setCheckedItems(checkedValues);
+    // };
 
     return (
         <>
-            <Checkbox.Group options={options} defaultValue={defaultValue} onChange={onChange} />
+            <Checkbox.Group {...props} />
             <br />
         </>
     );

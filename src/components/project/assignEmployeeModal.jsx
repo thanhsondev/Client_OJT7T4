@@ -4,10 +4,13 @@ import moment from 'moment';
 import { ProjectContext } from '../../contexts/projectContext';
 import { RoleContext } from '../../contexts/roleContext';
 import { EmployeeContext } from '../../contexts/employeeContext';
-import { Modal, Form, Select, DatePicker, Input } from 'antd';
+
+import { Modal, Form } from 'antd';
+
 import Button from '../buttons/ButtonCommon';
-const  { RangePicker } = DatePicker;
-const { TextArea } = Input;
+import TextArea from '../inputs/InputTextArea';
+import RangePicker from '../inputs/RangePicker';
+import Select from '../inputs/SelectCommon';
 
 const AssignEmployeeModal = (projectId) => {
   const {
