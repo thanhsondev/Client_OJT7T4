@@ -12,6 +12,8 @@ import { Dashboard } from './pages/dashboard/Dashboard';
 import LogPage from './pages/log/logPage';
 import Employees from './pages/employee/employees';
 import EmployeeDetails from './pages/employee/employeeDetails';
+import Projects from './pages/project/projects';
+import ProjectDetails from './pages/project/projectDetails';
 
 function App() {
    return (
@@ -27,6 +29,10 @@ function App() {
                            <Route path="employee">
                               <Route index element={<Employees />} />
                               <Route path=":employeeId" element={<EmployeeDetails />} />
+                           </Route>
+                           <Route path="project">
+                              <Route index element={<Projects />} />
+                              <Route path=":projectId" element={<ProjectDetails />} />
                            </Route>
                         </Route>
                      </Routes>
