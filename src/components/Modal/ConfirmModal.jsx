@@ -16,7 +16,7 @@ const Dialog = ({ handleOk, title, message }) => {
   return (
     <Modal
       title={title}
-      visible={showConfirmModal}
+      open={showConfirmModal}
       onCancel={handleCancel} 
       footer={null} 
     >

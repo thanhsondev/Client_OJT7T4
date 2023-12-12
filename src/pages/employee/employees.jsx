@@ -8,7 +8,7 @@ import { EmployeeContext } from '../../contexts/employeeContext';
 
 import ButtonCommon from '../../components/buttons/ButtonCommon';
 import AddModal from '../../components/employee/addEmployeeModal';
-import ConfirmModal from '../../components/Modal/ConfirmModal'
+import ConfirmModal from '../../components/Modal/ConfirmModal';
 
 const Employees = () => {
     const navigate = useNavigate();
