@@ -2,6 +2,7 @@ import { createContext, useReducer, useState, useContext } from "react";
 import { employeeReducer } from "../reducers/employeeReducer"
 import { apiUrl } from "./constants";
 import axios from "axios";
+import unorm from 'unorm';
 
 import { ComponentsContext } from "./componentsContext";
 
@@ -22,6 +23,8 @@ const EmployeeContextProvider = ({children}) => {
     } = useContext(ComponentsContext);
 
     const [showModal, setShowModal] = useState(false);
+
+    const [searchString, setSearchString] = useState("");
 
     const getEmployee = async () => {
         try {
@@ -119,6 +122,15 @@ const EmployeeContextProvider = ({children}) => {
             dispatch({ type: 'EMPDETAILS_LOADED_FAIL' });
         }
     }
+
+    const searchEmployee = (query) => {
+        const normalizedQuery = unorm.nfd(query).toLowerCase();
+        const filteredEmployees = employeeState.employees.filter(employee => {
+            const normalizedEmployeeName = unorm.nfd(employee.name).toLowerCase();
+            return normalizedEmployeeName.includes(normalizedQuery);
+        });
+        dispatch({ type: 'EMP_LOADED_SUCCESS', payload: filteredEmployees });
+    };
     
     const employeeContextData = {
         employeeState,
@@ -128,8 +140,11 @@ const EmployeeContextProvider = ({children}) => {
         deleteEmployee,
         updateEmployee,
         getEmployeeById,
+        searchEmployee,
         showModal,
-        setShowModal
+        setShowModal,
+        searchString,
+        setSearchString
     }
 
     return (

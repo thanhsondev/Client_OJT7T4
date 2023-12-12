@@ -18,7 +18,9 @@ const Employees = () => {
         getEmployee,
         employeeState: { employees, isLoading },
         deleteEmployee,
-        findEmployee,
+        searchEmployee,
+        searchString,
+        findEmployee
     } = useContext(EmployeeContext);
 
     const {
@@ -32,8 +34,14 @@ const Employees = () => {
     };
 
     useEffect(() => {
-        getEmployee();
-    }, []);
+        if (searchString === '') {
+            getEmployee();
+        } else {
+            console.log(searchString);
+            searchEmployee(searchString);
+        }
+    }, [searchString])
+
 
     const [empId, setEmpId] = useState('');
     const [searchText, setSearchText] = useState('');
