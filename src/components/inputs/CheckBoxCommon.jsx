@@ -7,9 +7,9 @@ const CheckBoxCommon = ({ options, defaultValue }) => {
         setCheckedItems 
     } = useContext(ComponentsContext);
 
-    useEffect(() => {
-        setCheckedItems(defaultValue);
-    }, [defaultValue]);
+    // useEffect(() => {
+    //     setCheckedItems(defaultValue);
+    // }, [defaultValue]);
 
     const onChange = (checkedValues) => {
         setCheckedItems(checkedValues);

@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Table, Tag, Spin, Alert } from 'antd';
+import { Button, Input, Space, Table, Tag, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { ComponentsContext } from '../../contexts/componentsContext';
@@ -8,7 +8,8 @@ import { EmployeeContext } from '../../contexts/employeeContext';
 
 import ButtonCommon from '../../components/buttons/ButtonCommon';
 import AddModal from '../../components/employee/addEmployeeModal';
-import ConfirmModal from '../../components/Modal/ConfirmModal'
+import ConfirmModal from '../../components/Modal/ConfirmModal';
+import Alert from '../../components/alerts/alertCommon'
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -17,17 +18,16 @@ const Employees = () => {
         getEmployee,
         employeeState: { employees, isLoading },
         deleteEmployee,
+        findEmployee,
     } = useContext(EmployeeContext);
 
     const {
         setShowConfirmModal,
-        alert,
-        setAlert,
-        alertMessage,
-        alertType
+        alert
     } = useContext(ComponentsContext);
 
     const handleDetails = (record) => {
+        findEmployee(record._id);
         navigate(`/employee/${record._id}`);
     };
 
@@ -39,10 +39,6 @@ const Employees = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
-
-    const onCloseAlert = () => {
-        setAlert(false);
-    };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -140,7 +136,7 @@ const Employees = () => {
             key: 'name',
             ...getColumnSearchProps(),
             render: (text, record) => (
-                <Link to={`/employee/${record._id}`}>
+                <Link to={`/employee/${record._id}`} onClick={() => handleDetails(record)}>
                     {text}
                 </Link>
             ),
@@ -204,38 +200,8 @@ const Employees = () => {
                 <>
                     {technical.map((tech) => {
                         let techName = tech.name;
-                        let color;
-                        switch (techName) {
-                            case 'Java':
-                                color = 'geekblue';
-                                break;
-                            case 'Javascript':
-                                color = 'gold';
-                                break;
-                            case 'PHP':
-                                color = 'purple';
-                                break;
-                            case 'Python':
-                                color = 'green';
-                                break;
-                            case 'ReactJs':
-                                color = 'cyan';
-                                break;
-                            case 'HTML':
-                                color = 'magenta';
-                                break;
-                            case 'CSS':
-                                color = 'Gray';
-                                break;
-                            case 'NodeJs':
-                                color = 'lime';
-                                break;
-                            default:
-                                color = 'red';
-                        }
-
                         return (
-                            <Tag color={color} key={techName}>
+                            <Tag color={'blue'} key={techName}>
                                 {techName}
                             </Tag>
                         );
@@ -271,7 +237,7 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
-                    <ButtonCommon buttonType="delete" handleOnClick={() => {setShowConfirmModal(true); setEmpId(record._id);}} />
+                    <ButtonCommon buttonType="delete" handleOnClick={() => { setShowConfirmModal(true); setEmpId(record._id); }} />
                 </Space>
             ),
         },
@@ -292,27 +258,14 @@ const Employees = () => {
 
     return (
         <>
-            <ButtonCommon buttonType="add" handleOnClick={() => setShowModal(true)}>
+            <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)}>
                 Add Employee
             </ButtonCommon>
             {body}
             <AddModal />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
+            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
             {alert && (
-                <Alert
-                    message={alertMessage}
-                    type={alertType}
-                    showIcon
-                    closable
-                    onClose={onCloseAlert}
-                    style={{
-                        position: 'fixed',
-                        top: 20,
-                        right: 16,
-                        width: 300,
-                        zIndex: 1000,
-                    }}
-                />
+                <Alert />
             )}
         </>
     );
