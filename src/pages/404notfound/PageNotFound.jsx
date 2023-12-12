@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { Link } from 'react-router-dom';
+
 const PageNotFound = () => {
     const [imageSrc, setImageSrc] = useState("");
 
@@ -30,7 +32,9 @@ const PageNotFound = () => {
                 {imageSrc && (
                     <img src={imageSrc} alt="404" />
                 )}
-                <button>Back to Dashboard</button>
+
+                <button onClick={() => { window.location.href = '/'; }}>Back to Dashboard</button>
+
             </div>
         </>
     );
