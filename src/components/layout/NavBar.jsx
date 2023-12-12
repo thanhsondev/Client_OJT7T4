@@ -10,12 +10,16 @@ import {
 } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from 'react-router-dom';
+
 import { LayoutContext } from "../../contexts/LayoutContext";
+import { AuthContext } from "../../contexts/authContext";
+
 import SearchBox from "./searchBox";
 
 export const NavBar = () => {
    const navigate = useNavigate();
    const { layout, setLayout } = useContext(LayoutContext);
+   const { logoutUser } = useContext(AuthContext);
 
    const Username = (props) => {
       return <p style={{ fontWeight: "600", fontSize: "larger" }}>{props.name}</p>;
@@ -27,7 +31,7 @@ export const NavBar = () => {
             <a
                target="_blank"
                rel="noopener noreferrer"
-               href="#"
+               onClick={() => logoutUser()} 
                style={{ fontWeight: "bold", fontSize: "larger" }}
             >
                <LogoutOutlined style={{ marginRight: "10px" }} />

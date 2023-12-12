@@ -1,44 +1,57 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import 'mdbreact/dist/css/mdb.css';
+import { useNavigate, Navigate } from 'react-router-dom';
 
-import InputTextCommon from '../../components/inputs/InputTextCommon';
-import { MDBContainer, MDBCol, MDBRow, MDBBtn,MDBInput, MDBCheckbox }
+import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBInput, MDBCheckbox }
     from 'mdb-react-ui-kit';
 import './loginStyle.css';
-import { useForm, Controller } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+import { AuthContext } from '../../contexts/authContext';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+
     const schema = yup
         .object({
-            email: yup.string().required().email().trim(),
+            username: yup.string().required().trim(),
             password: yup.string().required().max(16).trim(),
         })
-        .required()
+        .required();
+
     const {
         handleSubmit,
         control,
         formState: { errors },
-      } = useForm(
+    } = useForm(
         {
             resolver: yupResolver(schema),
             mode: 'onChange'
         },
-      )
+    );
 
-      const onLogin = (data) => {
+    const {
+        authState: {isAuthenticated},
+        loginUser
+    } = useContext(AuthContext);
+
+    const onLogin = (data) => {
         console.log(data);
-        // ... call api login
-      }
+        loginUser(data);
+        navigate(`/`);
+    };
+
+    if(isAuthenticated) {
+        return <Navigate to="/" />
+    }
 
     return (
         <MDBContainer fluid className="p-3 my-5 h-custom">
-
             <MDBRow>
-
                 <MDBCol col='10' md='6'>
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
                 </MDBCol>
 
                 <MDBCol col='4' md='6' className="form-container">
@@ -49,20 +62,20 @@ const LoginPage = () => {
 
                     <form onSubmit={handleSubmit(onLogin)}>
                         <Controller
-                            name="email"
+                            name="username"
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <div>
                                     <MDBInput
                                         wrapperClass='mb-4'
-                                        label='Email address'
+                                        label='Username'
                                         id='formControlLg'
-                                        type='email'
+                                        type='text'
                                         size="lg"
                                         {...field}
                                     />
-                                    {errors.email && <p className="error-message">Email is a required field</p>}
+                                    {errors.username && <p className="error-message">Username is a required field</p>}
                                 </div>
                             )}
                         />
@@ -100,7 +113,6 @@ const LoginPage = () => {
                     </div>
 
                 </MDBCol>
-
             </MDBRow>
         </MDBContainer>
     );
