@@ -17,6 +17,8 @@ const ProjectContextProvider = ({ children }) => {
     const [addEmployeeModal, setAddEmployeeModal] = useState(false);
     const [employeeDetailsModal, setEmployeeDetailsModal] = useState(false);
 
+    
+
     const getProjects = async () => {
         try {
         const response = await axios.get(`${apiUrl}/projects`)
@@ -97,6 +99,7 @@ const ProjectContextProvider = ({ children }) => {
     }
 
     const addEmployeeToProject = async employee => {
+        console.log(employee);
         try {
             const response = await axios.post(`${apiUrl}/projects/addemp`, employee)
             if (response.data.success) {
@@ -136,7 +139,7 @@ const ProjectContextProvider = ({ children }) => {
         addEmployeeModal,
         setAddEmployeeModal,
         employeeDetailsModal,
-        setEmployeeDetailsModal
+        setEmployeeDetailsModal,
     }
 
    return (
