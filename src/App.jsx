@@ -11,27 +11,18 @@ import { Layout } from './components/layout/Layout';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import Employees from './pages/employee/employees';
 import EmployeeDetails from './pages/employee/employeeDetails';
+import LoginPage from './pages/login/loginPage';
+import Router from './Router/routes';
+
+
+
 
 function App() {
+   
+
    return (
       <AuthContextProvider>
-         <LayoutContextProvider>
-            <EmployeeContextProvider>
-               <TechnicalContextProvider>
-                  <ComponentsContextProvider>
-                     <Routes>
-                        <Route path="/" element={<Layout />}>
-                           <Route path="dashboard" element={<Dashboard />} />
-                           <Route path="employee">
-                              <Route index element={<Employees />} />
-                              <Route path=":employeeId" element={<EmployeeDetails />} />
-                           </Route>
-                        </Route>
-                     </Routes>
-                  </ComponentsContextProvider>
-               </TechnicalContextProvider>
-            </EmployeeContextProvider>
-         </LayoutContextProvider>
+         <Router/>
       </AuthContextProvider>
    );
 }
