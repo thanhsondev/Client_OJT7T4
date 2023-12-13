@@ -9,11 +9,19 @@ const EmployeeContextProvider = ({children}) => {
     const [employeeState, dispatch] = useReducer(employeeReducer, {
         employee: null,
         employees: [],
-        histories: [],
         isLoading: true
     });
 
+    const {
+        setProcessing,
+        setAlert,
+        setAlertMessage,
+        setAlertType,
+    } = useContext(ComponentsContext);
+
     const [showModal, setShowModal] = useState(false);
+
+    const [searchString, setSearchString] = useState("");
 
     const getEmployee = async () => {
         try {
@@ -36,10 +44,22 @@ const EmployeeContextProvider = ({children}) => {
         try {
             const response = await axios.post(`${apiUrl}/employees/create`, newEmployee, { headers: { "Content-Type": "multipart/form-data" } })
             if (response.data.success) {
-                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees})
+                dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees});
+                setTimeout(() => {
+                    setProcessing(false);
+                }, 2000);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
                 return response.data
             }
         } catch (error) {
+            setTimeout(() => {
+                setProcessing(false);
+            }, 2000);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
             return error.response.data
                 ? error.response.data
                 : { success: false, message: "Server error" };
@@ -50,9 +70,15 @@ const EmployeeContextProvider = ({children}) => {
 		try {
 			const response = await axios.patch(`${apiUrl}/employees/delete/${empId}`)
 			if (response.data.success)
-				dispatch({ type: 'DELETE_EMP', payload: empId })
+				dispatch({ type: 'DELETE_EMP', payload: empId });
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
 		} catch (error) {
-			console.log(error)
+			console.log(error);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
 		}
 	}
 
@@ -60,10 +86,22 @@ const EmployeeContextProvider = ({children}) => {
 		try {
 			const response = await axios.patch(`${apiUrl}/employees/update/${empId}`, updatedEmp, { headers: { "Content-Type": "multipart/form-data" } })
 			if (response.data.success) {
-				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee })
+				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee });
+                setTimeout(() => {
+                    setProcessing(false);
+                }, 2000);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
 				return response.data
 			}
 		} catch (error) {
+            setTimeout(() => {
+                setProcessing(false);
+            }, 2000);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
 			return error.response.data
 				? error.response.data
 				: { success: false, message: 'Server error' }
@@ -81,6 +119,15 @@ const EmployeeContextProvider = ({children}) => {
             dispatch({ type: 'EMPDETAILS_LOADED_FAIL' });
         }
     }
+
+    const searchEmployee = (query) => {
+        const normalizedQuery = unorm.nfd(query).toLowerCase();
+        const filteredEmployees = employeeState.employees.filter(employee => {
+            const normalizedEmployeeName = unorm.nfd(employee.name).toLowerCase();
+            return normalizedEmployeeName.includes(normalizedQuery);
+        });
+        dispatch({ type: 'EMP_LOADED_SUCCESS', payload: filteredEmployees });
+    };
 
     const getEmployeeHistories = async (empId) => {
         try {
@@ -102,9 +149,12 @@ const EmployeeContextProvider = ({children}) => {
         deleteEmployee,
         updateEmployee,
         getEmployeeById,
+        searchEmployee,
         getEmployeeHistories,
         showModal,
-        setShowModal
+        setShowModal,
+        searchString,
+        setSearchString
     }
 
     return (

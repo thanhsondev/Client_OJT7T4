@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Table, Tag } from 'antd';
+import { Button, Input, Space, Table, Tag, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { ComponentsContext } from '../../contexts/componentsContext';
@@ -9,27 +9,39 @@ import { EmployeeContext } from '../../contexts/employeeContext';
 import ButtonCommon from '../../components/buttons/ButtonCommon';
 import AddModal from '../../components/employee/addEmployeeModal';
 import ConfirmModal from '../../components/Modal/ConfirmModal';
+import Alert from '../../components/alerts/alertCommon'
 
 const Employees = () => {
     const navigate = useNavigate();
     const {
         setShowModal,
         getEmployee,
-        employeeState: { employees },
+        employeeState: { employees, isLoading },
         deleteEmployee,
+        searchEmployee,
+        searchString,
+        findEmployee
     } = useContext(EmployeeContext);
 
     const {
-        setShowConfirmModal
+        setShowConfirmModal,
+        alert
     } = useContext(ComponentsContext);
 
     const handleDetails = (record) => {
+        findEmployee(record._id);
         navigate(`/employee/${record._id}`);
     };
 
     useEffect(() => {
-        getEmployee();
-    }, []);
+        if (searchString === '') {
+            getEmployee();
+        } else {
+            console.log(searchString);
+            searchEmployee(searchString);
+        }
+    }, [searchString])
+
 
     const [empId, setEmpId] = useState('');
     const [searchText, setSearchText] = useState('');
@@ -132,7 +144,7 @@ const Employees = () => {
             key: 'name',
             ...getColumnSearchProps(),
             render: (text, record) => (
-                <Link to={`/employee/${record._id}`}>
+                <Link to={`/employee/${record._id}`} onClick={() => handleDetails(record)}>
                     {text}
                 </Link>
             ),
@@ -233,20 +245,36 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
-                    <ButtonCommon buttonType="delete" handleOnClick={() => {setShowConfirmModal(true); setEmpId(record._id);}} />
+                    <ButtonCommon buttonType="delete" handleOnClick={() => { setShowConfirmModal(true); setEmpId(record._id); }} />
                 </Space>
             ),
         },
     ];
 
+    let body = null;
+    if (isLoading) {
+        body = (
+            <div className="spinner">
+                <Spin size="large" />
+            </div>
+        )
+    } else {
+        body = (
+            <Table columns={columns} dataSource={employees} pagination={{ pageSize: 6 }} rowKey="_id" />
+        )
+    }
+
     return (
         <>
-            <ButtonCommon buttonType="add" handleOnClick={() => setShowModal(true)}>
+            <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)}>
                 Add Employee
             </ButtonCommon>
-            <Table columns={columns} dataSource={employees} pagination={{ pageSize: 6 }} rowKey="_id" />
+            {body}
             <AddModal />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"}/>
+            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
+            {alert && (
+                <Alert />
+            )}
         </>
     );
 };

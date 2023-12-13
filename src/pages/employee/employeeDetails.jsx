@@ -1,63 +1,38 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { EmployeeContext } from '../../contexts/employeeContext';
-import { Tabs } from 'antd';
+import { ComponentsContext } from '../../contexts/componentsContext';
 
-import EmployeeForm from '../../components/employee/employeeForm'
-import EmployeeHistory from '../../components/employee/employeeHistory'
+import EmployeeForm from '../../components/employee/employeeForm';
+import Alert from '../../components/alerts/alertCommon';
+import Button from '../../components/buttons/ButtonCommon';
 
 const EmployeeDetails = () => {
-  const { 
-    employeeState: { employee, histories }, 
-    getEmployeeById,
-    getEmployeeHistories
+  const {
+    employeeState: { employee },
+    getEmployeeById
   } = useContext(EmployeeContext);
   const { employeeId } = useParams();
 
-  const [content, setContent] = useState('details')
-
   useEffect(() => {
     getEmployeeById(employeeId);
-    getEmployeeHistories(employeeId);
-  }, []);
+  }, [employee]);
 
-  const onChange = (key) => {
-    setContent(key)
-  };
+  const {
+    alert
+  } = useContext(ComponentsContext);
 
-  const items = [
-    {
-      key: 'details',
-      label: 'Information'
-    },
-    {
-      key: 'history',
-      label: 'History'
-    }
-  ];
-
-  let contentItem = null;
-  if (content === 'details') {
-    contentItem = (
-      <>
-        {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
-      </>
-    )
-  } else {
-    contentItem = (
-      <>
-        {histories !== null && <EmployeeHistory histories={histories} />}
-      </>
-    )
-  }
-
-  return ( 
+  return (
     <>
-    <Link to="/employee">Back</Link>
-    <div style={{width: "100%"}}>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-      {contentItem}
-    </div>
+      <div>
+        <Link to="/employee">Back</Link>
+      </div>
+      <div>
+        {employee !== null && <EmployeeForm employee={employee} employeeId={employeeId} />}
+      </div>
+      {alert && (
+        <Alert />
+      )}
     </>
   );
 };
