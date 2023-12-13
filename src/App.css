@@ -108,3 +108,7 @@
   height: 100%;
   }
 }
+
+.ant-popover-inner {
+  width: 300px;
+}

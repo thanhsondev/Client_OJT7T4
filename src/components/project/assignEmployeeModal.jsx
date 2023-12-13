@@ -41,25 +41,15 @@ const AssignEmployeeModal = (project) => {
     setAddEmployeeModal(false);
   };
 
-  let employeeOptions = [];
-  employees.map(emp => (
-    employeeOptions.push(
-      {
-        label: emp.name,
-        value: emp._id,
-      }
-    )
-  ))
+  const employeeOptions = employees.map(({ _id, name }) => ({
+    label: name,
+    value: _id,
+  }));
 
-  let roleOptions = [];
-  roles.map(role => (
-    roleOptions.push(
-      {
-        label: role.name,
-        value: role._id,
-      }
-    )
-  ));
+  const roleOptions = roles.map(({ _id, name }) => ({
+    label: name,
+    value: _id,
+  }));
 
   const [date, setDate] = useState([]);
 

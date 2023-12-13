@@ -6,7 +6,7 @@ const SearchBox = () => {
     const { setSearchString } = useContext(EmployeeContext);
 
     return (
-        <Input placeholder="input search text" size="large"onChange={(e) => {setSearchString(e.target.value)}} />
+        <Input placeholder="input search text" size="large" onPressEnter={(e) => {setSearchString(e.target.value)}} />
     )
 }
 

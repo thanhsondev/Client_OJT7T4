@@ -44,15 +44,15 @@ const EmployeeInProject = (employeesInProject) => {
             title: 'Position',
             dataIndex: 'role',
             key: 'role',
-            render: (_, { role }) => (
-                <p key={role._id}>{role.name}</p>
+            render: (_, record) => (
+                <p key={`${record.role._id} + ${record.employeeId._id}`}>{record.role.name}</p>
             )
         },
         {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
-                <Space size="middle">
+                <Space key={`button-${record.employeeId._id}`} size="middle">
                     <ButtonCommon buttonType="edit" handleOnClick={() => handleDetails(record)} />
                     <ButtonCommon buttonType="delete" handleOnClick={() => { setShowConfirmModal(true); setEmpId(record._id); }} />
                 </Space>

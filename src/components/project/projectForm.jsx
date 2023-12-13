@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 import { ProjectContext } from '../../contexts/projectContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
+import { ComponentsContext } from '../../contexts/componentsContext';
 
 import { Form, Switch } from 'antd';
 
@@ -22,27 +23,22 @@ const ProjectForm = (project) => {
   } = useContext(ProjectContext);
 
   const {
+    processing,
+    setProcessing
+  } = useContext(ComponentsContext);
+
+  const {
     technicalState: { technicals },
     getTechnicals
   } = useContext(TechnicalContext);
   useEffect(() => { getTechnicals() }, []);
 
-  let techOptions = []
-  technicals.map(tech => (
-    techOptions.push(
-      {
-        label: tech.name,
-        value: tech._id,
-      }
-    )
-  ));
+  const techOptions = technicals.map(({ _id, name }) => ({
+    label: name,
+    value: _id,
+  }));
 
-  let defaultCheckedList = []
-  projectInfo.technical.map(tech => (
-    defaultCheckedList.push(
-      tech._id
-    )
-  ));
+  const defaultCheckedList = projectInfo.technical.map(({ _id }) => _id);
 
   const [checkedTech, setCheckedTech] = useState(defaultCheckedList)
   const onTechChange = (checkedValues) => {
@@ -91,8 +87,12 @@ const ProjectForm = (project) => {
     formData.append("isActive", isActive);
     formData.append("technical", JSON.stringify(checkedTech));
 
+    setProcessing(true);
     updateProject(formData, projectInfo._id);
-    setIsEditing(!isEditing);
+
+    setTimeout(() => {
+      setIsEditing(!isEditing);
+  }, 2000);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -102,7 +102,11 @@ const ProjectForm = (project) => {
   return (
     <>
       {isEditing ?
-        <Button buttonType={"save"} handleOnClick={() => form.submit()} /> :
+        (
+          processing ? 
+          <Button buttonType={"loading"} /> :
+          <Button buttonType={"save"} handleOnClick={() => form.submit()} />
+        ) :
         <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
       }
       <Form
@@ -115,7 +119,8 @@ const ProjectForm = (project) => {
           description: projectInfo.description,
           isActive: isActive,
           status: projectInfo.status,
-          technicals: defaultCheckedList
+          technicals: defaultCheckedList, 
+          startDate: dayjs(dateFormat, 'DD/MM/YYYY')
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}

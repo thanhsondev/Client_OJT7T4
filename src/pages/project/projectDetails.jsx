@@ -2,11 +2,13 @@ import React, { useContext, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import { ProjectContext } from '../../contexts/projectContext';
+import { ComponentsContext } from '../../contexts/componentsContext';
 
 import ButtonCommon from '../../components/buttons/ButtonCommon';
 import EmployeeInProject from '../../components/project/employeeInProject';
 import AssignEmployeeModal from '../../components/project/assignEmployeeModal';
 import ProjectForm from '../../components/project/projectForm';
+import Alert from '../../components/alerts/alertCommon';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -17,6 +19,10 @@ const ProjectDetails = () => {
     setAddEmployeeModal,
     findProject
   } = useContext(ProjectContext);
+
+  const {
+    alert
+  } = useContext(ComponentsContext);
 
   useEffect(() => {
     findProject(projectId);
@@ -38,6 +44,9 @@ const ProjectDetails = () => {
         </div>
       </div>
       {project && <AssignEmployeeModal project={project} />}
+      {alert && (
+        <Alert />
+      )}
     </>
   );
 }

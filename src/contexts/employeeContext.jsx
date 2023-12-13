@@ -50,19 +50,19 @@ const EmployeeContextProvider = ({children}) => {
                 dispatch({type: 'EMP_CREATED_SUCCESS', payload: response.data.employees});
                 setTimeout(() => {
                     setProcessing(false);
-                }, 2000);
-                setAlert(true);
-                setAlertMessage(response.data.message);
-                setAlertType("success");
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000);          
                 return response.data
             }
         } catch (error) {
             setTimeout(() => {
                 setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("error");
             }, 2000);
-            setAlert(true);
-            setAlertMessage(error.response.data.message);
-            setAlertType("error");
             return error.response.data
                 ? error.response.data
                 : { success: false, message: "Server error" };
@@ -92,19 +92,19 @@ const EmployeeContextProvider = ({children}) => {
 				dispatch({ type: 'UPDATE_EMP', payload: response.data.employee });
                 setTimeout(() => {
                     setProcessing(false);
-                }, 2000);
-                setAlert(true);
-                setAlertMessage(response.data.message);
-                setAlertType("success");
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000); 
 				return response.data
 			}
 		} catch (error) {
             setTimeout(() => {
                 setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("error");
             }, 2000);
-            setAlert(true);
-            setAlertMessage(error.response.data.message);
-            setAlertType("error");
 			return error.response.data
 				? error.response.data
 				: { success: false, message: 'Server error' }
