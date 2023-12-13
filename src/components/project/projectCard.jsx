@@ -66,7 +66,7 @@ const ProjectCard = (project) => {
     const body = (
         <>
             <div style={{ width: "95%" }}>
-                <Badge.Ribbon text={`${employeesInProject.length} employees`} color="volcano">
+                {/* <Badge.Ribbon text={`${employeesInProject.length} employees`} color="volcano"> */}
                     <Card key={projectInfo._id} style={{ border: '1.25px solid #c7c5c5' }}>
                         <Tag color={
                             projectInfo.status === 'Planning' ? 'blue' :
@@ -109,7 +109,7 @@ const ProjectCard = (project) => {
                             />
                         </Dropdown>
                     </Card>
-                </Badge.Ribbon>
+                {/* </Badge.Ribbon> */}
             </div>
         </>
     )

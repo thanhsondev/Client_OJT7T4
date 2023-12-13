@@ -56,6 +56,12 @@ const ProjectContextProvider = ({ children }) => {
                 }, 2000);  
                 return response.data
             }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000); 
         } catch (error) {
             setTimeout(() => {
                 setProcessing(false);
@@ -72,11 +78,18 @@ const ProjectContextProvider = ({ children }) => {
     const closeProject = async projectId => {
 		try {
 			const response = await axios.patch(`${apiUrl}/projects/close/${projectId}`)
-			if (response.data.success)
+			if (response.data.success){
 				dispatch({ type: 'CLOSE_PROJECT' });
                 setAlert(true);
                 setAlertMessage(response.data.message);
                 setAlertType("success");
+            }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
 		} catch (error) {
 			console.log(error);
             setAlert(true);
@@ -98,6 +111,12 @@ const ProjectContextProvider = ({ children }) => {
                 }, 2000);
                 return response.data
 			}
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
 		} catch (error) {
             setTimeout(() => {
                 setProcessing(false);
@@ -138,7 +157,7 @@ const ProjectContextProvider = ({ children }) => {
     const addEmployeeToProject = async employee => {
         console.log(employee);
         try {
-            const response = await axios.post(`${apiUrl}/projects/addemp`, employee)
+            const response = await axios.post(`${apiUrl}/projects/addemp`, employee);
             if (response.data.success) {
                 dispatch({type: 'EMP_ADDED_SUCCESS', payload: response.data.employees})
                 setTimeout(() => {
@@ -149,6 +168,12 @@ const ProjectContextProvider = ({ children }) => {
                 }, 2000);
                 return response.data
             }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
         } catch (error) {
             setTimeout(() => {
                 setProcessing(false);
@@ -174,6 +199,12 @@ const ProjectContextProvider = ({ children }) => {
                     setAlertType("success");
                 }, 2000);
             }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
         } catch (error) {
             console.log(error);
             setTimeout(() => {

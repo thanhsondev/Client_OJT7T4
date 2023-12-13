@@ -32,6 +32,7 @@ const AddProject = () => {
     } = useContext(ComponentsContext);
 
     const [form] = Form.useForm();
+    const [disable, setDisable] = useState(false);
 
     useEffect(() => { getTechnicals() }, []);
 
@@ -73,10 +74,13 @@ const AddProject = () => {
         formData.append("technical", JSON.stringify(checkedTech));
 
         setProcessing(true);
+        setDisable(true);
         createProject(formData);
 
         if (processing === false) {
-            navigate(`/project`);
+            setTimeout(() => {
+                navigate(`/project`);
+            }, 2000);
         }
     };
 
@@ -98,6 +102,7 @@ const AddProject = () => {
                         }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
+                        disabled={disable}
                     >
                         <Form.Item
                             label="Project Name"
@@ -142,7 +147,7 @@ const AddProject = () => {
                         </Form.Item>
 
                         <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                            {processing === true ?
+                            {disable === true ?
                                 (<Button buttonType={"loading"} />)
                                 :
                                 (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)

@@ -156,6 +156,14 @@ const AddEmployeePage = () => {
         return emailRegex.test(email);
     };
 
+    const validateName = (rule, value) => {
+        const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>0-9]/;
+        if (specialCharacterRegex.test(value)) {
+            return Promise.reject('Name should not contain special characters or numbers');
+        }
+        return Promise.resolve();
+    };
+
     const onFinish = (values) => {
         const formData = new FormData();
 
@@ -322,6 +330,9 @@ const AddEmployeePage = () => {
                                 {
                                     required: true,
                                     message: 'Enter employee name',
+                                },
+                                {
+                                    validator: validateName,
                                 },
                             ]}
                         >

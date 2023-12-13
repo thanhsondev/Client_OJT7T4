@@ -18,6 +18,8 @@ const EmployeeInProject = (employeesInProject) => {
 
     const empInPro = employeesInProject.employeesInProject;
 
+    const filteredEmpInPro = empInPro.filter(emp => ((emp.isWorking === true) && (emp.employeeId.isDelete === false)));
+
     const [empId, setEmpId] = useState('');
     const [empDetails, setEmpDetails] = useState(null);
 
@@ -63,7 +65,7 @@ const EmployeeInProject = (employeesInProject) => {
     return (
         <>
             <h1>Employees in project</h1>
-            <Table dataSource={empInPro} columns={columns} />
+            <Table dataSource={filteredEmpInPro} columns={columns} />
             <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm remove employee"} message={"Do you confirm to remove this employee from project?"} />
             {empDetails && <EmployeeInProjectModal empDetails={empDetails} />}
         </>

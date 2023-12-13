@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import { format } from 'date-fns';
 
 import { ProjectContext } from '../../contexts/projectContext';
 import { RoleContext } from '../../contexts/roleContext';
@@ -52,14 +53,18 @@ const AssignEmployeeModal = (project) => {
   }));
 
   const [date, setDate] = useState([]);
+  const currentDate = format(new Date(), 'yyyy-MM-dd ');
 
   const handleChangeDate = (date, dateString) => {
     const formattedDates = dateString.map(dateString => moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toISOString());
-    console.log(moment(projectInfo.startDate), " & ", (moment(formattedDates[0])));
-    console.log(moment(projectInfo.startDate).isAfter(moment(formattedDates[0])));
 
     if ( moment(projectInfo.startDate).isAfter(moment(formattedDates[0])) === true ){
-      message.error('Join date must not be later than project start date');
+      message.error('Join date must not be sooner than project start date');
+      return;
+    }
+
+    if (currentDate > format(new Date(formattedDates[1]), 'yyyy-MM-dd ')){
+      message.error('Out date must not be sooner than today');
       return;
     }
 
