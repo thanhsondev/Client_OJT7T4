@@ -266,9 +266,7 @@ const Employees = () => {
 
     return (
         <>
-            <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)}>
-                Add Employee
-            </ButtonCommon>
+            <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)} />
             {body}
             <AddModal />
             <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
