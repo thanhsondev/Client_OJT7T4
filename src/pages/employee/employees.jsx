@@ -1,7 +1,6 @@
-import React, { useContext, useRef, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input, Space, Table, Tag, Spin } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Space, Table, Tag, Spin } from 'antd';
 
 import { ComponentsContext } from '../../contexts/componentsContext';
 import { EmployeeContext } from '../../contexts/employeeContext';
@@ -30,7 +29,6 @@ const Employees = () => {
     } = useContext(TechnicalContext);
 
     const {
-        setShowConfirmModal,
         alert
     } = useContext(ComponentsContext);
 
@@ -62,12 +60,16 @@ const Employees = () => {
     };
 
     const [empId, setEmpId] = useState('');
-    const searchInput = useRef(null);
 
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const handleDelete = (empId) => {
         deleteEmployee(empId);
         setShowConfirmModal(false);
     };
+    
+    const handleCancel = () => {
+        setShowConfirmModal(false);
+      }
 
     const columns = [
         {
@@ -180,7 +182,13 @@ const Employees = () => {
             <ButtonCommon buttonType="add-button" handleOnClick={() => setShowModal(true)} />
             {body}
             <AddModal />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm delete employee"} message={"Do you confirm to delete this employee?"} />
+            <ConfirmModal
+                visible={showConfirmModal}
+                handleOk={() => handleDelete(empId)}
+                handleCancel={() => handleCancel()}
+                title={"Confirm delete employee"}
+                message={"Do you confirm to delete this employee?"}
+            />
             {alert && (
                 <Alert />
             )}

@@ -156,6 +156,14 @@ const EmployeeForm = (employee) => {
         <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue={dialCode} />
     );
 
+    const validateName = (rule, value) => {
+        const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>0-9]/;
+        if (specialCharacterRegex.test(value)) {
+            return Promise.reject('Name should not contain special characters or numbers');
+        }
+        return Promise.resolve();
+    };
+
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^\d{9,12}$/;
         return phoneRegex.test(phoneNumber);
@@ -313,6 +321,9 @@ const EmployeeForm = (employee) => {
                             {
                                 required: true,
                                 message: 'Enter employee name',
+                            },
+                            {
+                                validator: validateName,
                             },
                         ]}
                     >

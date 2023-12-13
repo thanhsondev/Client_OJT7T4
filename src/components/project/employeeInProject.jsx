@@ -3,13 +3,9 @@ import { Table, Space } from 'antd';
 import ButtonCommon from '../buttons/ButtonCommon';
 import ConfirmModal from '../Modal/ConfirmModal';
 import EmployeeInProjectModal from './employeeInProjectModal';
-import { ComponentsContext } from '../../contexts/componentsContext';
 import { ProjectContext } from '../../contexts/projectContext';
 
 const EmployeeInProject = (employeesInProject) => {
-    const {
-        setShowConfirmModal
-    } = useContext(ComponentsContext);
 
     const {
         removeEmployeeFromProject,
@@ -28,10 +24,14 @@ const EmployeeInProject = (employeesInProject) => {
         setEmpDetails(record);
     };
 
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const handleDelete = (empId) => {
         removeEmployeeFromProject(empId);
         setShowConfirmModal(false);
     };
+    const handleCancel = () => {
+        setShowConfirmModal(false);
+    }
 
     const columns = [
         {
@@ -66,8 +66,14 @@ const EmployeeInProject = (employeesInProject) => {
         <>
             <h1>Employees in project</h1>
             <Table dataSource={filteredEmpInPro} columns={columns} />
-            <ConfirmModal handleOk={() => handleDelete(empId)} title={"Confirm remove employee"} message={"Do you confirm to remove this employee from project?"} />
             {empDetails && <EmployeeInProjectModal empDetails={empDetails} />}
+            <ConfirmModal
+                visible={showConfirmModal}
+                handleOk={() => handleDelete(empId)}
+                handleCancel={() => handleCancel()}
+                title={"Confirm remove employee"}
+                message={"Do you confirm to remove this employee from project?"}
+            />
         </>
     );
 };

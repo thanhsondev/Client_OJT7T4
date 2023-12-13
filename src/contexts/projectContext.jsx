@@ -22,7 +22,6 @@ const ProjectContextProvider = ({ children }) => {
         setAlertType,
     } = useContext(ComponentsContext);
 
-    const [addProjectModal, setAddProjecrModal] = useState(false);
     const [addEmployeeModal, setAddEmployeeModal] = useState(false);
     const [employeeDetailsModal, setEmployeeDetailsModal] = useState(false);
 
@@ -155,7 +154,6 @@ const ProjectContextProvider = ({ children }) => {
     }
 
     const addEmployeeToProject = async employee => {
-        console.log(employee);
         try {
             const response = await axios.post(`${apiUrl}/projects/addemp`, employee);
             if (response.data.success) {
@@ -227,8 +225,6 @@ const ProjectContextProvider = ({ children }) => {
         getEmployeesInProject,
         addEmployeeToProject,
         removeEmployeeFromProject,
-        addProjectModal,
-        setAddProjecrModal,
         addEmployeeModal,
         setAddEmployeeModal,
         employeeDetailsModal,

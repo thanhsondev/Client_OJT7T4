@@ -6,7 +6,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
-import { Form, Switch } from 'antd';
+import { Form } from 'antd';
 
 import TextInput from '../inputs/InputTextCommon';
 import Button from '../buttons/ButtonCommon';
@@ -15,23 +15,34 @@ import Select from '../inputs/SelectCommon';
 import Checkbox from '../inputs/CheckBoxCommon';
 import TextArea from '../inputs/InputTextArea';
 
+import ConfirmModal from '../../components/Modal/ConfirmModal';
+
 const ProjectForm = (project) => {
   const projectInfo = project.project;
 
   const {
-    updateProject
+    projectState: { employeesInProject },
+    updateProject,
+    closeProject,
+    removeEmployeeFromProject,
   } = useContext(ProjectContext);
+
+  const filteredEmpInPro = employeesInProject.filter(emp => ((emp.isWorking === true) && (emp.employeeId.isDelete === false)));
 
   const {
     processing,
-    setProcessing
+    setProcessing,
+    // setShowConfirmModal
   } = useContext(ComponentsContext);
 
   const {
     technicalState: { technicals },
     getTechnicals
   } = useContext(TechnicalContext);
-  useEffect(() => { getTechnicals() }, []);
+
+  useEffect(() => {
+    getTechnicals();
+  }, []);
 
   const techOptions = technicals.map(({ _id, name }) => ({
     label: name,
@@ -68,11 +79,6 @@ const ProjectForm = (project) => {
     setDate(formattedDates);
   }
 
-  const [isActive, setIsActive] = useState(projectInfo.isActive);
-  const onIsActiveChange = (checked) => {
-    setIsActive(checked);
-  };
-
   const handleEdit = () => {
     setIsEditing(!isEditing);
   };
@@ -84,7 +90,6 @@ const ProjectForm = (project) => {
     formData.append("description", values.description);
     formData.append("startDate", date);
     formData.append("status", status);
-    formData.append("isActive", isActive);
     formData.append("technical", JSON.stringify(checkedTech));
 
     setProcessing(true);
@@ -92,22 +97,53 @@ const ProjectForm = (project) => {
 
     setTimeout(() => {
       setIsEditing(!isEditing);
-  }, 2000);
+    }, 2000);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.error('Failed:', errorInfo);
   };
 
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const closedBtnOnClick = () => {
+    setShowConfirmModal(true);
+  }
+
+  const handleCancel = () => {
+    setShowConfirmModal(false);
+  }
+
+  const handleClose = (projectId) => {
+
+    if(filteredEmpInPro.length > 0){
+      filteredEmpInPro.map((emp) => {
+        removeEmployeeFromProject(emp._id);
+      });
+    }
+
+    closeProject(projectId);
+    setShowConfirmModal(false);
+  };
+
   return (
     <>
-      {isEditing ?
-        (
-          processing ? 
-          <Button buttonType={"loading"} /> :
-          <Button buttonType={"save"} handleOnClick={() => form.submit()} />
+      {projectInfo.isActive ?
+        (isEditing ?
+          (
+            processing ?
+              <Button buttonType={"loading"} /> :
+              <>
+                <Button buttonType={"save"} handleOnClick={() => form.submit()} />
+                <Button buttonType={"delete-text"} handleOnClick={() => closedBtnOnClick()} />
+              </>
+          ) :
+          <>
+            <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
+            <Button buttonType={"delete-text"} handleOnClick={() => closedBtnOnClick()} />
+          </>
         ) :
-        <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
+        <p>This project is closed</p>
       }
       <Form
         form={form}
@@ -117,9 +153,8 @@ const ProjectForm = (project) => {
           remember: true,
           name: projectInfo.name,
           description: projectInfo.description,
-          isActive: isActive,
           status: projectInfo.status,
-          technicals: defaultCheckedList, 
+          technicals: defaultCheckedList,
           startDate: dayjs(dateFormat, 'DD/MM/YYYY')
         }}
         onFinish={onFinish}
@@ -127,13 +162,6 @@ const ProjectForm = (project) => {
         autoComplete="off"
         disabled={!isEditing}
       >
-        <Form.Item
-          label="Active"
-          name="isActive"
-        >
-          <Switch defaultChecked={isActive} onChange={onIsActiveChange} />
-        </Form.Item>
-
         <Form.Item
           label="Project Name"
           name="name"
@@ -173,10 +201,17 @@ const ProjectForm = (project) => {
           name="technicals"
           valuePropName="checked"
         >
-          <Checkbox options={techOptions} defaultValue={defaultCheckedList} onChange={onTechChange} />
+          <Checkbox options={techOptions} defaultValue={checkedTech} onChange={onTechChange} />
         </Form.Item>
 
       </Form>
+      <ConfirmModal
+        visible={showConfirmModal}
+        handleOk={() => handleClose(projectInfo._id)}
+        handleCancel={() => handleCancel()}
+        title={'Confirm close project'}
+        message={'Do you want to close this project?'}
+      />
     </>
   )
 }
