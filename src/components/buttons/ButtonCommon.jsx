@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
     PlusOutlined,
     ReloadOutlined,
@@ -6,13 +6,8 @@ import {
     DeleteTwoTone
 } from "@ant-design/icons";
 import { Button, Flex } from "antd";
-import { ComponentsContext } from "../../contexts/componentsContext";
-import './ButtonComponent.css';
 
 const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) => {
-    const {
-        processing
-    } = useContext(ComponentsContext);
     return (
         <Flex gap="small" wrap="wrap" className="site-button-ghost-wrapper">
             {buttonType === "reload" && (
@@ -62,6 +57,11 @@ const ButtonCommon = ({ buttonType, size = "large", handleOnClick, ...props }) =
             )}
             {buttonType === "add-button" && (
                 <Button className="add-button" size={size} onClick={handleOnClick}>
+                </Button>
+            )}
+            {buttonType === "details" && (
+                <Button type="primary" ghost size={size} onClick={handleOnClick}>
+                    Details
                 </Button>
             )}
 

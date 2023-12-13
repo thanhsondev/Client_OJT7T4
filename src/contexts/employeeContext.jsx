@@ -1,10 +1,7 @@
-import { createContext, useReducer, useState, useContext } from "react";
+import { createContext, useReducer, useState } from "react";
 import { employeeReducer } from "../reducers/employeeReducer"
 import { apiUrl } from "./constants";
 import axios from "axios";
-import unorm from 'unorm';
-
-import { ComponentsContext } from "./componentsContext";
 
 export const EmployeeContext = createContext()
 
@@ -131,6 +128,18 @@ const EmployeeContextProvider = ({children}) => {
         });
         dispatch({ type: 'EMP_LOADED_SUCCESS', payload: filteredEmployees });
     };
+
+    const getEmployeeHistories = async (empId) => {
+        try {
+        const response = await axios.get(`${apiUrl}/employees/history/${empId}`)
+        if (response.status === 200) {
+            dispatch({type: 'HISTORY_LOADED_SUCCESS', payload: response.data.histories});
+        }
+        } catch (error) {
+            console.log(error);
+            dispatch({type: 'HISTORY_LOADED_FAIL'});
+        }
+    }
     
     const employeeContextData = {
         employeeState,
@@ -141,6 +150,7 @@ const EmployeeContextProvider = ({children}) => {
         updateEmployee,
         getEmployeeById,
         searchEmployee,
+        getEmployeeHistories,
         showModal,
         setShowModal,
         searchString,
