@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { ProjectContext } from '../../contexts/projectContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
@@ -65,7 +66,7 @@ const ProjectForm = (project) => {
   };
 
   const [date, setDate] = useState(projectInfo.startDate);
-  const startDate = moment(new Date(date));
+  const dateFormat = moment(date).format('DD/MM/YYYY').toString();
   const handleChangeDate = (date, dateString) => {
     const formattedDates = moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toISOString();
     setDate(formattedDates);
@@ -112,7 +113,6 @@ const ProjectForm = (project) => {
           remember: true,
           name: projectInfo.name,
           description: projectInfo.description,
-          startDate: startDate,
           isActive: isActive,
           status: projectInfo.status,
           technicals: defaultCheckedList
@@ -153,7 +153,7 @@ const ProjectForm = (project) => {
           label="Start date"
           name="startDate"
         >
-          <DatePicker onChange={handleChangeDate} />
+          <DatePicker defaultValue={dayjs(dateFormat, 'DD/MM/YYYY')} format={"YYYY-MM-DD"} onChange={handleChangeDate} />
         </Form.Item>
 
         <Form.Item

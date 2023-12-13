@@ -14,6 +14,7 @@ import Employees from './pages/employee/employees';
 import EmployeeDetails from './pages/employee/employeeDetails';
 import Projects from './pages/project/projects';
 import ProjectDetails from './pages/project/projectDetails';
+import AddProject from './pages/project/addProject';
 
 function App() {
    return (
@@ -33,6 +34,7 @@ function App() {
                               <Route path="project">
                                  <Route index element={<Projects />} />
                                  <Route path=":projectId" element={<ProjectDetails />} />
+                                 <Route path="add" element={<AddProject />} />
                               </Route>
                            </Route>
                         </Routes>

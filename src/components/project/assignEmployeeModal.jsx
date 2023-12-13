@@ -5,14 +5,14 @@ import { ProjectContext } from '../../contexts/projectContext';
 import { RoleContext } from '../../contexts/roleContext';
 import { EmployeeContext } from '../../contexts/employeeContext';
 
-import { Modal, Form } from 'antd';
+import { Modal, Form, message } from 'antd';
 
 import Button from '../buttons/ButtonCommon';
 import TextArea from '../inputs/InputTextArea';
 import RangePicker from '../inputs/RangePicker';
 import Select from '../inputs/SelectCommon';
 
-const AssignEmployeeModal = (projectId) => {
+const AssignEmployeeModal = (project) => {
   const {
     addEmployeeModal,
     setAddEmployeeModal,
@@ -28,6 +28,9 @@ const AssignEmployeeModal = (projectId) => {
     getRoles,
     roleState: { roles },
   } = useContext(RoleContext);
+
+  const projectInfo = project.project;
+  const projectId = projectInfo._id;
 
   useEffect(() => {
     getEmployee();
@@ -62,6 +65,14 @@ const AssignEmployeeModal = (projectId) => {
 
   const handleChangeDate = (date, dateString) => {
     const formattedDates = dateString.map(dateString => moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toISOString());
+    console.log(moment(projectInfo.startDate), " & ", (moment(formattedDates[0])));
+    console.log(moment(projectInfo.startDate).isAfter(moment(formattedDates[0])));
+
+    if ( moment(projectInfo.startDate).isAfter(moment(formattedDates[0])) === true ){
+      message.error('Join date must not be later than project start date');
+      return;
+    }
+
     setDate(formattedDates);
   }
 
@@ -73,15 +84,15 @@ const AssignEmployeeModal = (projectId) => {
 
   const onFinish = (values) => {
     const formData = new FormData()
-        formData.append("employeeId", values.employeeId);
-        formData.append("projectId", projectId.projectId);
-        formData.append("role", values.role);
-        formData.append("joinDate", date[0]);
-        formData.append("outDate", date[1]);
-        formData.append("description", values.description);
+    formData.append("employeeId", values.employeeId);
+    formData.append("projectId", projectId);
+    formData.append("role", values.role);
+    formData.append("joinDate", date[0]);
+    formData.append("outDate", date[1]);
+    formData.append("description", values.description);
 
-        addEmployeeToProject(formData);
-        setAddEmployeeModal(false);
+    addEmployeeToProject(formData);
+    setAddEmployeeModal(false);
   }
 
   return (
@@ -153,17 +164,23 @@ const AssignEmployeeModal = (projectId) => {
           />
         </Form.Item>
 
-        <Form.Item 
+        <Form.Item
           label="Join Date"
           name="date"
-          >
-          <RangePicker onChange={handleChangeDate}/>
+          rules={[
+            {
+              required: true,
+              message: 'Please select join date',
+            }
+          ]}
+        >
+          <RangePicker onChange={handleChangeDate} />
         </Form.Item>
 
-        <Form.Item 
+        <Form.Item
           label="Description"
           name="description"
-          >
+        >
           <TextArea />
         </Form.Item>
 

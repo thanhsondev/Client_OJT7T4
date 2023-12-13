@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { ProjectContext } from '../../contexts/projectContext';
 
@@ -25,18 +25,19 @@ const ProjectDetails = () => {
 
   return (
     <>
-      <div style={{ display: "flex", width: "100%", justifyContent:"space-between"}}>
-        <div style={{ width: "45%"}}>
+      <Link to="/project">Back</Link>
+      <div style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
+        <div style={{ width: "45%" }}>
           {project && <ProjectForm project={project} />}
         </div>
-        <div style={{ width: "45%"}}>
+        <div style={{ width: "45%" }}>
           <ButtonCommon buttonType="add" handleOnClick={() => setAddEmployeeModal(true)}>
             Add Employee
           </ButtonCommon>
           {employeesInProject && isLoading ? <p>Đang tải...</p> : <EmployeeInProject employeesInProject={employeesInProject} />}
         </div>
       </div>
-      <AssignEmployeeModal projectId={projectId} />
+      {project && <AssignEmployeeModal project={project} />}
     </>
   );
 }
