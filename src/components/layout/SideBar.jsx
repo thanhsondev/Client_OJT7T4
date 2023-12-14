@@ -46,17 +46,18 @@ export const Sidebar = () => {
       return <p style={{ fontWeight: "700", fontSize: "x-large" }}>{props.name}</p>;
    };
    return (
-      <div>
-         <Menu
-            onClick={onClick}
-            style={{
-               marginTop: "5vh",
-               width: "100%",
-            }}
-            mode="inline"
-            inlineCollapsed={layout}
-            items={items}
-         />
-      </div>
+     <div>
+       <Menu
+         onClick={onClick}
+         style={{
+           borderColor: "white",
+           marginTop: 60,
+           width: "100%",
+         }}
+         mode="inline"
+         inlineCollapsed={layout}
+         items={items}
+       />
+     </div>
    );
 };
