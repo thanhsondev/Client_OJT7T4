@@ -22,73 +22,117 @@ export const NavBar = () => {
    const { logoutUser } = useContext(AuthContext);
 
    const Username = (props) => {
-      return <p style={{ fontWeight: "600", fontSize: "larger" }}>{props.name}</p>;
+     return (
+       <p
+         style={{
+           fontWeight: "500",
+           fontSize: "15",
+           marginBottom: "0",
+           marginTop: 4,
+         }}
+       >
+         {props.name}
+       </p>
+     );
    };
    const items = [
-      {
-         key: "1",
-         label: (
-            <a
-               target="_blank"
-               rel="noopener noreferrer"
-               onClick={() => logoutUser()} 
-               style={{ fontWeight: "bold", fontSize: "larger" }}
-            >
-               <LogoutOutlined style={{ marginRight: "10px" }} />
-               Logout
-            </a>
-         ),
-      },
+     {
+       key: "1",
+       label: (
+         <a
+           target="_blank"
+           rel="noopener noreferrer"
+           onClick={() => logoutUser()}
+           style={{ fontWeight: "bold", fontSize: "larger" }}
+         >
+           <LogoutOutlined style={{ marginRight: "10px" }} />
+           Logout
+         </a>
+       ),
+     },
    ];
    const onClick = (e) => {
-      console.log("click ", e);
+     console.log("click ", e);
    };
    return (
-      <div className="nav-container">
-         <div style={{marginLeft: "1vw", width: "4vw"}}>
-            <MenuOutlined 
-               style={{ fontSize: "2vw" }} 
-               onClick={()=> {setLayout(!layout)}}
-            />
-         </div>
+     <div
+       //  className="nav-container"
+       style={{
+         width: "100%",
+         height: "100%",
+         display: "flex",
+         alignItems: "center",
+         justifyContent: "space-between",
+       }}
+     >
+       <div style={{ marginLeft: 20, width: 30 }}>
+         <MenuOutlined
+           style={{ fontSize: "20px" }}
+           onClick={() => {
+             setLayout(!layout);
+           }}
+         />
+       </div>
 
-         <div style={{marginLeft: "10vw", width: "35vw"}}>
-            <SearchBox />
-         </div>
+       <div style={{ width: "40%" }}>
+         <SearchBox />
+       </div>
 
-         <div style={{marginLeft: "10vw", width: "10vw"}}></div>
-            <HistoryOutlined 
-               style={{ marginRight: "25px", fontSize: "25px" }}
-               onClick={()=> {navigate("/log")}}
-            />
+       {/* <div style={{ marginLeft: "10vw", width: "10vw" }}></div> */}
+       <div
+         style={{
+           display: "flex",
+           marginRight: 20,
+           width: "fit-content",
+           alignItems: "center",
+         }}
+       >
+         <HistoryOutlined
+           style={{ marginRight: "25px", fontSize: "20px" }}
+           onClick={() => {
+             navigate("/log");
+           }}
+         />
          <Dropdown
-            menu={{
-               items,
-            }}
+           menu={{
+             items,
+           }}
          >
-            <a onClick={onClick}>
-               <div className="Nav" style={{ right: 0 }}>
-                  <span className="nav-role">
-                     <Username name="Admin" />
-                  </span>
-                  <Space>
-                     <Avatar
-                        size={{
-                           xs: 26,
-                           sm: 30,
-                           md: 37,
-                           lg: 46,
-                           xl: 50,
-                           xxl: 60,
-                        }}
-                        src="https://res.cloudinary.com/dfz0xsh2d/image/upload/v1702260661/c7qizzx5bcgelc4s9fud.png"
-                        style={{ marginLeft: "10px" }}
-                     />
-                  </Space>
-               </div>
-            </a>
+           <div style={{ display: "flex", alignItems: "center" }}>
+             <Username name="Admin" />
+             <Avatar
+               size={{
+                 xs: 15,
+                 md: 15,
+               }}
+               src="https://res.cloudinary.com/dfz0xsh2d/image/upload/v1702260661/c7qizzx5bcgelc4s9fud.png"
+               style={{ marginLeft: "10px" }}
+             />
+           </div>
+           {/* <a onClick={onClick}>
+             <div className="Nav" style={{ right: 0 }}>
+               <span className="nav-role">
+                 <Username name="Admin" />
+               </span>
+               <Space>
+                 <Avatar
+                   size={{
+                     xs: 26,
+                     sm: 30,
+                     md: 37,
+                     lg: 46,
+                     xl: 50,
+                     xxl: 60,
+                   }}
+                   src="https://res.cloudinary.com/dfz0xsh2d/image/upload/v1702260661/c7qizzx5bcgelc4s9fud.png"
+                   style={{ marginLeft: "10px" }}
+                 />
+               </Space>
+             </div>
+           </a> */}
          </Dropdown>
-      </div>
+       </div>
+     </div>
    );
 };
 
