@@ -105,17 +105,19 @@
   justify-content: center;
 }
 .cont-404 img{
+  margin-top: 1px;
   height: 70vh;
   width: 50vw;
 }
 .cont-404 button {
+  margin-top: 50px;
   padding: 12px 15px;
   background: #7E57C2; /* Fallback */
   background: linear-gradient(45deg, #7E57C2, #FF6D00);
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  color: #fff;
+  color: black;
   font-size: medium;
   font-weight: bold;
   position: relative;
@@ -130,12 +132,13 @@
   display: block;
   width: 300%;
   height: 300%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 204, 217, 0.5);
   transition: all 0.6s ease;
   border-radius: 50%;
   z-index: 0;
   transform: translate(-50%, -50%);
 }
+
 
 .cont-404 button:hover::before {
   width: 0;
