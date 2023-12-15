@@ -1,14 +1,15 @@
 import { useContext, useState, useEffect } from 'react';
-import { Form, Upload, message, Select } from 'antd';
+import { Form, Upload, message, Row, Col, Tag, Popover, Button } from 'antd';
 
 import { EmployeeContext } from '../../contexts/employeeContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
 import { ComponentsContext } from '../../contexts/componentsContext';
 
 import TextInput from '../../components/inputs/InputTextCommon';
-import Checkbox from '../inputs/CheckBoxCommon';
 import RadioButton from '../inputs/RadioCommon';
-import Button from '../buttons/ButtonCommon';
+import Select from '../inputs/SelectCommon';
+import NumberInput from '../inputs/InputNumberCommon';
+import ButtonCommon from '../buttons/ButtonCommon';
 
 import countryCode from '../../JsonData/CountryCodes.json';
 
@@ -21,8 +22,6 @@ const EmployeeForm = (employee) => {
     } = useContext(TechnicalContext);
 
     const {
-        checkedItems,
-        radioItem,
         processing,
         setProcessing
     } = useContext(ComponentsContext);
@@ -32,13 +31,6 @@ const EmployeeForm = (employee) => {
         getTechnicals();
     }, []);
 
-    let defaultCheckedList = [];
-    employee.employee.technical.map(tech => (
-        defaultCheckedList.push(
-            tech._id
-        )
-    ))
-
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
 
@@ -46,15 +38,109 @@ const EmployeeForm = (employee) => {
         setIsEditing(!isEditing);
     };
 
-    let phoneOptions = [];
-    countryCode.map(country => (
-        phoneOptions.push(
+    const techOptions = technicals.map(({ _id, name }) => ({
+        label: name,
+        value: _id,
+    }));
+
+    const [employeeTechnicals, setEmployeeTechnicals] = useState(employee.employee.technical);
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpenChange = (newOpen) => {
+        setTechnical("Technical");
+        setPoint(0);
+        setOpen(newOpen);
+    };
+
+    const hide = () => {
+        setOpen(false);
+    };
+
+    const isTechnicalExist = (techId) => {
+        return employeeTechnicals.some((tech) => tech.technicalId === techId);
+    };
+
+    const addTech = () => {
+        if (technical === "Technical") {
+            message.error('Please select technical');
+            return;
+        }
+
+        if (isTechnicalExist(technical)) {
+            message.warning('Technical already exists for this employee');
+            return;
+        }
+
+        setEmployeeTechnicals((prevTechnicals) => [
+            ...prevTechnicals,
             {
-                label: country.name,
-                value: country.dial_code,
+                technicalId: technical,
+                point: point
             }
-        )
-    ))
+        ]);
+        setOpen(false);
+    };
+
+    const removeTechnical = (removedTechId) => {
+        const updatedTechnicals = employeeTechnicals.filter((tech) => tech.technicalId !== removedTechId);
+        setEmployeeTechnicals(updatedTechnicals);
+    }
+
+    const [technical, setTechnical] = useState("Technical");
+    const handleTechChange = (value) => {
+        setTechnical(value);
+    };
+
+    const [point, setPoint] = useState(0);
+    const handlePointChange = (value) => {
+        setPoint(value);
+    };
+
+    const selectTech = (
+        <Select onChange={handleTechChange} options={techOptions} defaultValue={technical} />
+    );
+
+    const content = (
+        <div>
+            <NumberInput addonBefore={selectTech} min={0} max={10} onChange={handlePointChange} defaultValue={0} />
+            <br />
+            <Row>
+                <Col>
+                    <ButtonCommon buttonType={"cancel"} handleOnClick={() => hide()} />
+                </Col>
+                <Col>
+                    <ButtonCommon buttonType={"save"} handleOnClick={() => addTech()} />
+                </Col>
+            </Row>
+        </div>
+    );
+
+    const genderOptions = [
+        {
+            label: 'Male',
+            value: 'male',
+        },
+        {
+            label: 'Female',
+            value: 'female',
+        },
+        {
+            label: 'Other',
+            value: 'other',
+        },
+    ];
+
+    const [checkedGender, setCheckedGender] = useState('');
+    const onGenderChange = (checkedValues) => {
+        setCheckedGender(checkedValues);
+    };
+
+    const phoneOptions = countryCode.map(({ name, dial_code }) => ({
+        label: name,
+        value: dial_code,
+    }));
+
     const phoneNumber = employee.employee.phone;
 
     const defaultDialCode = phoneNumber.slice(0, 3);
@@ -69,6 +155,14 @@ const EmployeeForm = (employee) => {
     const selectPhone = (
         <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue={dialCode} />
     );
+
+    const validateName = (rule, value) => {
+        const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>0-9]/;
+        if (specialCharacterRegex.test(value)) {
+            return Promise.reject('Name should not contain special characters or numbers');
+        }
+        return Promise.resolve();
+    };
 
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^\d{9,12}$/;
@@ -113,15 +207,15 @@ const EmployeeForm = (employee) => {
             formData.append("phone", dialCode + form.getFieldValue("phone"));
             formData.append("email", form.getFieldValue("email"));
             formData.append("identity", form.getFieldValue("identity"));
-            formData.append("gender", radioItem);
-            formData.append("technical", JSON.stringify(checkedItems));
+            formData.append("gender", checkedGender);
+            formData.append("technical", JSON.stringify(employeeTechnicals));
 
             updateEmployee(formData, employee.employeeId);
             setProcessing(true);
 
-            if (processing === false) {
+            setTimeout(() => {
                 setIsEditing(!isEditing);
-            }
+            }, 2000);
 
         } catch (error) {
             console.error('Validation failed:', error);
@@ -131,34 +225,6 @@ const EmployeeForm = (employee) => {
     const onFinishFailed = (errorInfo) => {
         console.error('Failed:', errorInfo);
     };
-
-    let techOptions = []
-    technicals.map(tech => (
-        techOptions.push(
-            {
-                label: tech.name,
-                value: tech._id,
-            }
-        )
-    ))
-
-
-
-
-    const genderOptions = [
-        {
-            label: 'Male',
-            value: 'male',
-        },
-        {
-            label: 'Female',
-            value: 'female',
-        },
-        {
-            label: 'Other',
-            value: 'other',
-        },
-    ]
 
     const [imageUrl, setImageUrl] = useState();
     const [imgFile, setImgFile] = useState();
@@ -193,10 +259,10 @@ const EmployeeForm = (employee) => {
     return (
         <>
             <div>
-                <Button buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
+                <ButtonCommon buttonType={"edit-text"} handleOnClick={() => handleEdit()} />
             </div>
             <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
-                <h1 style={{ textAlign: "center" }}>{employee.employee.name.toUpperCase()}</h1>
+                <h1 style={{ textAlign: "center" }}>{employee.employee.name}'s Information</h1>
             </div>
             <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
                 <Form
@@ -256,6 +322,9 @@ const EmployeeForm = (employee) => {
                                 required: true,
                                 message: 'Enter employee name',
                             },
+                            {
+                                validator: validateName,
+                            },
                         ]}
                     >
                         <TextInput />
@@ -313,22 +382,46 @@ const EmployeeForm = (employee) => {
                         <TextInput />
                     </Form.Item>
 
-                    <Form.Item
-                        label="Technicals"
-                        valuePropName="checked"
-                    >
-                        <Checkbox options={techOptions} defaultValue={defaultCheckedList} />
-                    </Form.Item>
+                    <Row>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Technicals"
+                                name="technicals"
+                            >
+                                <Popover
+                                    content={content}
+                                    title="Add technical"
+                                    trigger="click"
+                                    open={open}
+                                    onOpenChange={handleOpenChange}
+                                    placement="topLeft"
+                                    style={{ width: "100px" }}
+                                >
+                                    <Button>Add technical</Button>
+                                </Popover>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            {employeeTechnicals.map((tech) => {
+                                const technical = technicals.find((t) => t._id === tech.technicalId._id);
+                                return (
+                                    <Tag color={'blue'} key={tech.technicalId._id} closeIcon={isEditing} onClose={() => removeTechnical(tech.technicalId)}>
+                                        {technical ? `${technical.name} - ${tech.point}` : ''}
+                                    </Tag>
+                                );
+                            })}
+                        </Col>
+                    </Row>
 
                     <Form.Item label="Gender">
-                        <RadioButton options={genderOptions} defaultValue={employee.employee.gender} />
+                        <RadioButton options={genderOptions} defaultValue={employee.employee.gender} onChange={onGenderChange} />
                     </Form.Item>
 
                     <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
                         {processing === true ?
-                            (<Button buttonType={"loading"} />)
+                            (<ButtonCommon buttonType={"loading"} />)
                             :
-                            (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                            (<ButtonCommon buttonType={"save"} handleOnClick={() => form.submit()} />)
                         }
                     </Form.Item>
                 </Form>

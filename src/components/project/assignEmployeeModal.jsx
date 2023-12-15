@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import { format } from 'date-fns';
 
 import { ProjectContext } from '../../contexts/projectContext';
 import { RoleContext } from '../../contexts/roleContext';
@@ -41,35 +42,29 @@ const AssignEmployeeModal = (project) => {
     setAddEmployeeModal(false);
   };
 
-  let employeeOptions = [];
-  employees.map(emp => (
-    employeeOptions.push(
-      {
-        label: emp.name,
-        value: emp._id,
-      }
-    )
-  ))
+  const employeeOptions = employees.map(({ _id, name }) => ({
+    label: name,
+    value: _id,
+  }));
 
-  let roleOptions = [];
-  roles.map(role => (
-    roleOptions.push(
-      {
-        label: role.name,
-        value: role._id,
-      }
-    )
-  ));
+  const roleOptions = roles.map(({ _id, name }) => ({
+    label: name,
+    value: _id,
+  }));
 
   const [date, setDate] = useState([]);
+  const currentDate = format(new Date(), 'yyyy-MM-dd ');
 
   const handleChangeDate = (date, dateString) => {
     const formattedDates = dateString.map(dateString => moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toISOString());
-    console.log(moment(projectInfo.startDate), " & ", (moment(formattedDates[0])));
-    console.log(moment(projectInfo.startDate).isAfter(moment(formattedDates[0])));
 
     if ( moment(projectInfo.startDate).isAfter(moment(formattedDates[0])) === true ){
-      message.error('Join date must not be later than project start date');
+      message.error('Join date must not be sooner than project start date');
+      return;
+    }
+
+    if (currentDate > format(new Date(formattedDates[1]), 'yyyy-MM-dd ')){
+      message.error('Out date must not be sooner than today');
       return;
     }
 

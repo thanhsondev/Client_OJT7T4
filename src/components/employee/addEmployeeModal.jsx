@@ -3,12 +3,14 @@ import { EmployeeContext } from '../../contexts/employeeContext'
 import { TechnicalContext } from '../../contexts/technicalContext'
 import { ComponentsContext } from '../../contexts/componentsContext'
 
-import { Form, Upload, message, Modal, Col, Row, Select } from 'antd';
+import { Form, Upload, message, Col, Modal, Row, Tag } from 'antd';
+import { Popover, Button } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import TextInput from '../inputs/InputTextCommon';
-import Checkbox from '../inputs/CheckBoxCommon';
-import RadioButton from '../inputs/RadioCommon';
-import Button from '../buttons/ButtonCommon';
+import TextInput from '../../components/inputs/InputTextCommon';
+import NumberInput from '../inputs/InputNumberCommon';
+import RadioButton from '../../components/inputs/RadioCommon';
+import ButtonCommon from '../../components/buttons/ButtonCommon';
+import Select from '../../components/inputs/SelectCommon';
 
 import countryCode from '../../JsonData/CountryCodes.json';
 
@@ -25,25 +27,11 @@ const AddEmployeePage = () => {
     } = useContext(EmployeeContext);
 
     const {
-        checkedItems,
-        setCheckedItems,
-        radioItem,
-        setRadioItem,
         processing,
         setProcessing
     } = useContext(ComponentsContext);
 
     useEffect(() => { getTechnicals() }, [])
-
-    let techOptions = []
-    technicals.map(tech => (
-        techOptions.push(
-            {
-                label: tech.name,
-                value: tech._id,
-            }
-        )
-    ))
 
     const genderOptions = [
         {
@@ -58,17 +46,17 @@ const AddEmployeePage = () => {
             label: 'Other',
             value: 'other',
         },
-    ]
+    ];
 
-    let phoneOptions = [];
-    countryCode.map(country => (
-        phoneOptions.push(
-            {
-                label: country.name,
-                value: country.dial_code,
-            }
-        )
-    ))
+    const [checkedGender, setCheckedGender] = useState('');
+    const onGenderChange = (checkedValues) => {
+        setCheckedGender(checkedValues);
+    };
+
+    const phoneOptions = countryCode.map(({ name, dial_code }) => ({
+        label: name,
+        value: dial_code,
+    }));
 
     const [dialCode, setDialCode] = useState("+84");
 
@@ -80,6 +68,84 @@ const AddEmployeePage = () => {
         <Select onChange={handlePhoneChange} options={phoneOptions} defaultValue={dialCode} />
     );
 
+    const techOptions = technicals.map(({ _id, name }) => ({
+        label: name,
+        value: _id,
+    }));
+
+    const [employeeTechnicals, setEmployeeTechnicals] = useState([]);
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpenChange = (newOpen) => {
+        setTechnical("Technical");
+        setPoint(0);
+        setOpen(newOpen);
+    };
+
+    const hide = () => {
+        setOpen(false);
+    };
+
+    const isTechnicalExist = (techId) => {
+        return employeeTechnicals.some((tech) => tech.technicalId === techId);
+    };
+
+    const addTech = () => {
+        if (technical === "Technical") {
+            message.error('Please select technical');
+            return;
+        }
+
+        if (isTechnicalExist(technical)) {
+            message.warning('Technical already exists for this employee');
+            return;
+        }
+
+        setEmployeeTechnicals((prevTechnicals) => [
+            ...prevTechnicals,
+            {
+                technicalId: technical,
+                point: point
+            }
+        ]);
+        setOpen(false);
+    };
+
+    const removeTechnical = (removedTechId) => {
+        const updatedTechnicals = employeeTechnicals.filter((tech) => tech.technicalId !== removedTechId);
+        setEmployeeTechnicals(updatedTechnicals);
+    }
+
+    const [technical, setTechnical] = useState("Technical");
+    const handleTechChange = (value) => {
+        setTechnical(value);
+    };
+
+    const [point, setPoint] = useState(0);
+    const handlePointChange = (value) => {
+        setPoint(value);
+    };
+
+    const selectTech = (
+        <Select onChange={handleTechChange} options={techOptions} defaultValue={technical} />
+    );
+
+    const content = (
+        <div>
+            <NumberInput addonBefore={selectTech} min={0} max={10} onChange={handlePointChange} defaultValue={0} />
+            <br />
+            <Row>
+                <Col>
+                    <ButtonCommon buttonType={"cancel"} handleOnClick={() => hide()} />
+                </Col>
+                <Col>
+                    <ButtonCommon buttonType={"save"} handleOnClick={() => addTech()} />
+                </Col>
+            </Row>
+        </div>
+    );
+
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^\d{9,12}$/;
         return phoneRegex.test(phoneNumber);
@@ -88,6 +154,14 @@ const AddEmployeePage = () => {
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    };
+
+    const validateName = (rule, value) => {
+        const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>0-9]/;
+        if (specialCharacterRegex.test(value)) {
+            return Promise.reject('Name should not contain special characters or numbers');
+        }
+        return Promise.resolve();
     };
 
     const onFinish = (values) => {
@@ -122,8 +196,8 @@ const AddEmployeePage = () => {
         formData.append("phone", dialCode + form.getFieldValue("phone"));
         formData.append("email", form.getFieldValue("email"));
         formData.append("identity", form.getFieldValue("identity"));
-        formData.append("gender", radioItem);
-        formData.append("technical", JSON.stringify(checkedItems));
+        formData.append("gender", checkedGender);
+        formData.append("technical", JSON.stringify(employeeTechnicals));
 
         setProcessing(true);
         createEmployee(formData);
@@ -131,8 +205,6 @@ const AddEmployeePage = () => {
         if (processing === false) {
             setShowModal(false);
             form.resetFields();
-            setCheckedItems([]);
-            setRadioItem(null);
         }
     };
 
@@ -243,7 +315,7 @@ const AddEmployeePage = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Gender">
-                            <RadioButton options={genderOptions} />
+                            <RadioButton options={genderOptions} onChange={onGenderChange} />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -258,6 +330,9 @@ const AddEmployeePage = () => {
                                 {
                                     required: true,
                                     message: 'Enter employee name',
+                                },
+                                {
+                                    validator: validateName,
                                 },
                             ]}
                         >
@@ -314,7 +389,6 @@ const AddEmployeePage = () => {
                 </Row>
 
                 <Row>
-                    {/* <Col span={2}></Col> */}
                     <Col span={14}>
                         <Form.Item
                             label="Phone number"
@@ -329,30 +403,52 @@ const AddEmployeePage = () => {
                             <TextInput addonBefore={selectPhone} prefix={dialCode} />
                         </Form.Item>
                     </Col>
-                    {/* <Col span={2}></Col> */}
                 </Row>
 
-
-                <Form.Item
-                    label="Technicals"
-                    valuePropName="checked"
-                >
-                    <Checkbox options={techOptions} />
-                </Form.Item>
+                <Row>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Technicals"
+                            name="technicals"
+                        >
+                            <Popover
+                                content={content}
+                                title="Add technical"
+                                trigger="click"
+                                open={open}
+                                onOpenChange={handleOpenChange}
+                                placement="topLeft"
+                                style={{ width: "100px" }}
+                            >
+                                <Button>Add technical</Button>
+                            </Popover>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        {employeeTechnicals.map((tech) => {
+                            const technical = technicals.find((t) => t._id === tech.technicalId);
+                            return (
+                                <Tag color={'blue'} key={tech.technicalId} closeIcon={true} onClose={() => removeTechnical(tech.technicalId)}>
+                                    {technical ? `${technical.name} - ${tech.point}` : ''}
+                                </Tag>
+                            );
+                        })}
+                    </Col>
+                </Row>
 
                 <Row>
                     <Col span={16}></Col>
                     <Col span={2}>
-                        <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                            <Button buttonType={"cancel"} handleOnClick={() => handleCancel()} />
+                        <Form.Item labelAlign="right" >
+                            <ButtonCommon buttonType={"cancel"} handleOnClick={() => handleCancel()} />
                         </Form.Item>
                     </Col>
                     <Col span={2}>
                         <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
                             {processing === true ?
-                                (<Button buttonType={"loading"} />)
+                                (<ButtonCommon buttonType={"loading"} />)
                                 :
-                                (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                                (<ButtonCommon buttonType={"save"} handleOnClick={() => form.submit()} />)
                             }
                         </Form.Item>
                     </Col>

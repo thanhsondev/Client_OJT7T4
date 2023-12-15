@@ -1,8 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 
 import { ProjectContext } from '../../contexts/projectContext';
 import { TechnicalContext } from '../../contexts/technicalContext';
+import { ComponentsContext } from '../../contexts/componentsContext';
 
 import { Form } from 'antd';
 import TextInput from '../../components/inputs/InputTextCommon';
@@ -13,6 +15,8 @@ import Checkbox from '../../components/inputs/CheckBoxCommon';
 import Button from '../../components/buttons/ButtonCommon';
 
 const AddProject = () => {
+    const navigate = useNavigate();
+
     const {
         createProject
     } = useContext(ProjectContext);
@@ -22,19 +26,20 @@ const AddProject = () => {
         getTechnicals
     } = useContext(TechnicalContext);
 
+    const {
+        processing,
+        setProcessing
+    } = useContext(ComponentsContext);
+
     const [form] = Form.useForm();
+    const [disable, setDisable] = useState(false);
 
     useEffect(() => { getTechnicals() }, []);
 
-    let techOptions = []
-    technicals.map(tech => (
-        techOptions.push(
-            {
-                label: tech.name,
-                value: tech._id,
-            }
-        )
-    ));
+    const techOptions = technicals.map(({ _id, name }) => ({
+        label: name,
+        value: _id,
+    }));
 
     const [checkedTech, setCheckedTech] = useState([])
     const onTechChange = (checkedValues) => {
@@ -68,7 +73,15 @@ const AddProject = () => {
         formData.append("status", status);
         formData.append("technical", JSON.stringify(checkedTech));
 
+        setProcessing(true);
+        setDisable(true);
         createProject(formData);
+
+        if (processing === false) {
+            setTimeout(() => {
+                navigate(`/project`);
+            }, 2000);
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -89,6 +102,7 @@ const AddProject = () => {
                         }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
+                        disabled={disable}
                     >
                         <Form.Item
                             label="Project Name"
@@ -133,7 +147,11 @@ const AddProject = () => {
                         </Form.Item>
 
                         <Form.Item labelAlign="right" wrapperCol={{ offset: 20 }}>
-                            <Button buttonType={"save"} handleOnClick={() => form.submit()} />
+                            {disable === true ?
+                                (<Button buttonType={"loading"} />)
+                                :
+                                (<Button buttonType={"save"} handleOnClick={() => form.submit()} />)
+                            }
                         </Form.Item>
 
                     </Form>

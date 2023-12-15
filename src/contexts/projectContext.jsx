@@ -1,7 +1,9 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useReducer, useState, useContext } from "react";
 import { projectReducer } from "../reducers/projectReducer"
 import { apiUrl } from "./constants";
 import axios from "axios";
+
+import {ComponentsContext} from "./componentsContext";
 
 export const ProjectContext = createContext();
 
@@ -13,11 +15,15 @@ const ProjectContextProvider = ({ children }) => {
         isLoading: true
     });
 
-    const [addProjectModal, setAddProjecrModal] = useState(false);
+    const {
+        setProcessing,
+        setAlert,
+        setAlertMessage,
+        setAlertType,
+    } = useContext(ComponentsContext);
+
     const [addEmployeeModal, setAddEmployeeModal] = useState(false);
     const [employeeDetailsModal, setEmployeeDetailsModal] = useState(false);
-
-    
 
     const getProjects = async () => {
         try {
@@ -41,9 +47,27 @@ const ProjectContextProvider = ({ children }) => {
             const response = await axios.post(`${apiUrl}/projects/create`, newProject)
             if (response.data.success) {
                 dispatch({type: 'PRO_CREATED_SUCCESS', payload: response.data.projects})
+                setTimeout(() => {
+                    setProcessing(false);
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000);  
                 return response.data
             }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000); 
         } catch (error) {
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("error");
+            }, 2000);
             return error.response.data
                 ? error.response.data
                 : { success: false, message: "Server error" };
@@ -53,10 +77,23 @@ const ProjectContextProvider = ({ children }) => {
     const closeProject = async projectId => {
 		try {
 			const response = await axios.patch(`${apiUrl}/projects/close/${projectId}`)
-			if (response.data.success)
-				dispatch({ type: 'CLOSE_PROJECT' })
+			if (response.data.success){
+				dispatch({ type: 'CLOSE_PROJECT' });
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("success");
+            }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
 		} catch (error) {
-			console.log(error)
+			console.log(error);
+            setAlert(true);
+            setAlertMessage(error.response.data.message);
+            setAlertType("error");
 		}
 	}
 
@@ -65,9 +102,27 @@ const ProjectContextProvider = ({ children }) => {
 			const response = await axios.patch(`${apiUrl}/projects/update/${projectId}`, updatedProject)
 			if (response.data.success) {
 				dispatch({ type: 'UPDATE_PRO', payload: response.data.project })
-				return response.data
+				setTimeout(() => {
+                    setProcessing(false);
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000);
+                return response.data
 			}
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
 		} catch (error) {
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("error");
+            }, 2000);
 			return error.response.data
 				? error.response.data
 				: { success: false, message: 'Server error' }
@@ -99,14 +154,31 @@ const ProjectContextProvider = ({ children }) => {
     }
 
     const addEmployeeToProject = async employee => {
-        console.log(employee);
         try {
-            const response = await axios.post(`${apiUrl}/projects/addemp`, employee)
+            const response = await axios.post(`${apiUrl}/projects/addemp`, employee);
             if (response.data.success) {
                 dispatch({type: 'EMP_ADDED_SUCCESS', payload: response.data.employees})
+                setTimeout(() => {
+                    setProcessing(false);
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000);
                 return response.data
             }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
         } catch (error) {
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("success");
+            }, 2000);
             return error.response.data
                 ? error.response.data
                 : { success: false, message: "Server error" };
@@ -114,12 +186,31 @@ const ProjectContextProvider = ({ children }) => {
     }
 
     const removeEmployeeFromProject = async employeeInProjectId => {
-		try {
-			const response = await axios.patch(`${apiUrl}/projects/removeemp/${employeeInProjectId}`)
-			if (response.data.success)
-				dispatch({ type: 'REMOVED_EMP' })
-		} catch (error) {
-			console.log(error)
+        try {
+            const response = await axios.patch(`${apiUrl}/projects/removeemp/${employeeInProjectId}`)
+            if (response.data.success) {
+                dispatch({ type: 'REMOVED_EMP' });
+                setTimeout(() => {
+                    setProcessing(false);
+                    setAlert(true);
+                    setAlertMessage(response.data.message);
+                    setAlertType("success");
+                }, 2000);
+            }
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(response.data.message);
+                setAlertType("error");
+            }, 2000);
+        } catch (error) {
+            console.log(error);
+            setTimeout(() => {
+                setProcessing(false);
+                setAlert(true);
+                setAlertMessage(error.response.data.message);
+                setAlertType("success");
+            }, 2000);
 		}
 	}
 
@@ -134,8 +225,6 @@ const ProjectContextProvider = ({ children }) => {
         getEmployeesInProject,
         addEmployeeToProject,
         removeEmployeeFromProject,
-        addProjectModal,
-        setAddProjecrModal,
         addEmployeeModal,
         setAddEmployeeModal,
         employeeDetailsModal,

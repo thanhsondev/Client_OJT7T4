@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from 'antd';
 
-const InputTextCommon = ({ inputType, ...props }) => {
+const InputTextCommon = ({ ...props }) => {
     return (
         <>
             <Input {...props} />

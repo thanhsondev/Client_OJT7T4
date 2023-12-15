@@ -2,11 +2,15 @@ import React, { useContext, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import { ProjectContext } from '../../contexts/projectContext';
+import { ComponentsContext } from '../../contexts/componentsContext';
 
 import ButtonCommon from '../../components/buttons/ButtonCommon';
+import Alert from '../../components/alerts/alertCommon';
+
 import EmployeeInProject from '../../components/project/employeeInProject';
 import AssignEmployeeModal from '../../components/project/assignEmployeeModal';
 import ProjectForm from '../../components/project/projectForm';
+import ProjectTimeline from '../../components/project/projectTimeline';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -17,6 +21,10 @@ const ProjectDetails = () => {
     setAddEmployeeModal,
     findProject
   } = useContext(ProjectContext);
+
+  const {
+    alert
+  } = useContext(ComponentsContext);
 
   useEffect(() => {
     findProject(projectId);
@@ -34,10 +42,16 @@ const ProjectDetails = () => {
           <ButtonCommon buttonType="add" handleOnClick={() => setAddEmployeeModal(true)}>
             Add Employee
           </ButtonCommon>
-          {employeesInProject && isLoading ? <p>Đang tải...</p> : <EmployeeInProject employeesInProject={employeesInProject} />}
+          {employeesInProject !== null && isLoading ? <p>Đang tải...</p> : <EmployeeInProject employeesInProject={employeesInProject} />}
         </div>
       </div>
+      <div>
+        {employeesInProject !== null && isLoading ? <p>Đang tải...</p> : <ProjectTimeline employeesInProject={employeesInProject} />}
+      </div>
       {project && <AssignEmployeeModal project={project} />}
+      {alert && (
+        <Alert />
+      )}
     </>
   );
 }
